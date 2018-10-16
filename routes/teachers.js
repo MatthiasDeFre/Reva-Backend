@@ -12,18 +12,43 @@ router.get('/codes', function(req, res, next) {
       return next(new Error("No codes found"));
     res.send(codes);
   }); 
-  //res.send([{code: "code"},{code:"code1"}, {code:"code2"}]);
 });
 
-/* GET all questions for the given teacherId. */
+/* GET all questions with possible answers. */
 router.get('/questions', function(req, res, next) {
   let query = Question.find({});
   query.exec(function(err, questions){
-    if(err || codes.length == 0)
+    if(err || questions.length == 0)
       return next(new Error("No questions found"));
     res.send(questions);
   }); 
-  //res.send([{code: "code"},{code:"code1"}, {code:"code2"}]);
+});
+
+/* GET all questions with answers from groups from the given . */
+router.get('/groupquestions', function(req, res, next) {
+  let query = Group.find({"teacherId": req.query.teacherId}).populate("answers.question");
+  query.exec(function(err, groups){
+    if(err || groups.length == 0)
+      return next(new Error("No questions found"));
+    let questionArray = [];
+    groups.forEach(group => {
+      group.answers.forEach(answer => {
+        //Check if its possible to change answer.question instead of creating new object
+       answer.question = "test"
+        let test = {
+          group: {name: group.name, image: group.imageString},
+          //question: {body: answer.question.body, possibleAnswers: answer.question.possibleAnswers},
+          question: answer.question,
+          answer: answer.answer
+        }
+        console.log(answer.question)
+        questionArray.push(test)
+      })
+      
+    });
+    //console.log(questionArray)
+    res.send(questionArray);
+  }); 
 });
 
 router.post('/makegroups', function(req, res, next) {
@@ -37,7 +62,7 @@ router.post('/makegroups', function(req, res, next) {
       //New group with random questionlist
       questions = shuffle(questions);
     //optional = generateCode();
-     groups.push(new Group({teacherId: 0, code: generateCode(), answers: createEmptyAnswer(questions)}));
+     groups.push(new Group({teacherId: 0, code: generateCode(), name:"een naam",imageString:"een image", answers: createEmptyAnswer(questions)}));
     }
     console.log(groups);
     Group.insertMany(groups, () => res.send(groups));
