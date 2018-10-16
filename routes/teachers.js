@@ -53,26 +53,20 @@ router.get('/groupquestions', function(req, res, next) {
 
 router.post('/makegroups', function(req, res, next) {
   let amount = req.query.amount;
-  console.log(req.query.amount);
-  let groups = [];
-  let questionsQ = Question.find();
-  questionsQ.exec((err, questions) => {
 
-    for(var i=0; i < amount; i++) {
-      //New group with random questionlist
-      questions = shuffle(questions);
-    //optional = generateCode();
-     groups.push(new Group({teacherId: 0, code: generateCode(), name:"een naam",imageString:"een image", answers: createEmptyAnswer(questions)}));
-    }
-    console.log(groups);
-    Group.insertMany(groups, () => res.send(groups));
-   
-  })
-  //TODO
-  //let visitId = req.visitId
-  //GET visitId from db and check for teacher with user
- 
+  //TODO Get teacher id from auth method
+  let groups = [];
+  for(var i=0; i < amount; i++) {
+   groups.push(new Group({teacherId: 0, code: generateCode(), answers: createEmptyAnswer(questions)}));
+  }
+  Group.insertMany(groups, () => res.send(groups));
 });
+router.delete("/removegroups", function(req, res, next) {
+  Group.deleteMany({teacherId: 0}, function(err, response) {
+    res.status(204);
+    res.send("Codes deleted")
+  })
+})
 
 function shuffle(array) {
   let counter = array.length;
