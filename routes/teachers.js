@@ -15,6 +15,17 @@ router.get('/codes', function(req, res, next) {
   //res.send([{code: "code"},{code:"code1"}, {code:"code2"}]);
 });
 
+/* GET all questions for the given teacherId. */
+router.get('/questions', function(req, res, next) {
+  let query = Question.find({});
+  query.exec(function(err, questions){
+    if(err || codes.length == 0)
+      return next(new Error("No questions found"));
+    res.send(questions);
+  }); 
+  //res.send([{code: "code"},{code:"code1"}, {code:"code2"}]);
+});
+
 router.post('/makegroups', function(req, res, next) {
   let amount = req.query.amount;
   console.log(req.query.amount);

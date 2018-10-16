@@ -9,9 +9,9 @@ router.get('/reset', function(req, res, next) {
   res.send("ok");
 });
 
-router.get(' ', function(req, res, next) {
-  let quest = new Question({body: "test", posted: new Date()});
-  let quest2 = new Question({body: "test2", posted: new Date()});
+router.get('/seed', function(req, res, next) {
+  let quest = new Question({body: "test", posted: new Date(), possibleAnswers: ["Answer 1", "Answer 2"]});
+  let quest2 = new Question({body: "test2", posted: new Date(), possibleAnswers: ["Answer 1"]});
  
   let query = Question.insertMany([quest, quest2]);
   query.then(() => res.send("seeding ok"));
