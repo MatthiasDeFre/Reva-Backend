@@ -12,6 +12,7 @@ var mongoose = require('mongoose');
 //(node:17724) DeprecationWarning: current URL string parser is deprecated, and will be removed in a future version. To use the new parser, pass option { useNewUrlParser: true } to MongoClient.connect.
 mongoose.connect('mongodb://localhost/revadb', {useNewUrlParser: true});
 require("./models/Question");
+require("./models/Group");
 
 var index = require('./routes/index');
 var users = require('./routes/users');
