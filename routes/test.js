@@ -3,7 +3,8 @@ var router = express.Router();
 let mongoose = require('mongoose');
 
 let Question = mongoose.model('Question');
-
+let Group = mongoose.model("Group");
+let Answer = mongoose.model("Answer")
 router.get('/reset', function(req, res, next) {
   mongoose.connection.db.dropDatabase()
   res.send("ok");
@@ -41,5 +42,48 @@ router.post('/makegroups', function(req, res, next) {
   //GET visitId from db and check for teacher with user
  
 });
+
+function createEmptyAnswer(questions) {
+  let answers = [];
+  for(var i =0; i < questions.length; i++) {
+    answers.push(new Answer({question: questions[i]._id}));
+  }
+  console.log(questions.length);
+  return answers;
+}
+function shuffle(array) {
+  let counter = array.length;
+
+  // While there are elements in the array
+  while (counter > 0) {
+      // Pick a random index
+      let index = Math.floor(Math.random() * counter);
+
+      // Decrease counter by 1
+      counter--;
+
+      // And swap the last element with it
+      let temp = array[counter];
+      array[counter] = array[index];
+      array[index] = temp;
+  }
+
+  return array;
+}
+function generateCode() {
+  let code = Math.random().toString(36).substring(2, 7);
+  
+  if(code.length < 5)
+    return generateCode();
+  //Check if code exists
+  let query = Group.findOne({"code":code});
+  query.exec(function(err, group) {
+    
+    if(group == null)
+      return code
+    return generateCode()
+  })
+  
+}
 
 module.exports = router;
