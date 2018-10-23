@@ -11,13 +11,17 @@ var mongoose = require('mongoose');
 //Need to use option newUrlParser because of deprecation
 //(node:17724) DeprecationWarning: current URL string parser is deprecated, and will be removed in a future version. To use the new parser, pass option { useNewUrlParser: true } to MongoClient.connect.
 mongoose.connect('mongodb://localhost/revadb', {useNewUrlParser: true});
+require("./models/Category");
+require("./models/Exhibitor");
 require("./models/Question");
 require("./models/Group");
+
 
 var index = require('./routes/index');
 var users = require('./routes/users');
 var general = require('./routes/general');
 var teachers = require('./routes/teachers');
+var students = require('./routes/student');
 var ergoStudents = require('./routes/ergo');
 var test = require('./routes/test');
 
@@ -26,7 +30,7 @@ let cors = require('cors');
 app.use(cors({origin: "*", credentials: true}));
 
 
-
+console.log(" ___      ___             ____\n|   \\    |     \\       / /    \\\n| ___\\   |___   \\     / /______\\\n|     \\  |       \\   / /        \\\n|      \\ |___     \\./ /          \\\n====================================\n:: Node.js Backend ::  (v0.2.6.ALHPA)")
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
@@ -39,6 +43,7 @@ app.use('/', index);
 app.use('/users', users);
 app.use("/API/general", general);
 app.use("/API/teachers", teachers);
+app.use("/API/student", students);
 app.use("/API/test", test);
 //app.use("/API/ergo", ergoStudents);
 

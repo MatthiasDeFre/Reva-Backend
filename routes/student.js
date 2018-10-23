@@ -2,11 +2,20 @@ var express = require('express');
 var router = express.Router();
 let mongoose = require('mongoose');
 let Group = mongoose.model('Group');
+let Exhibtor = mongoose.model('Exhibitor');
 /* GET home page. */
 router.get('/codes', function(req, res, next) {
   let query = group.
   res.send([{code: "code"},{code:"code1"}, {code:"code2"}]);
 });
+
+/*GET Existing categories*/ 
+router.get("/categories", function(req, res, next) {
+  let query = Exhibtor.find().distinct("category", function(err, categories){
+    console.log(categories)
+    res.json(categories);
+  });
+})
 
 //Answer a question for the given group
 //Method gets the group and then appends the answer to the answerstring property of the last answer object

@@ -5,6 +5,7 @@ let mongoose = require('mongoose');
 let Question = mongoose.model('Question');
 let Group = mongoose.model("Group");
 let Answer = mongoose.model("Answer")
+let Exhibitor = mongoose.model("Exhibitor")
 router.get('/reset', function(req, res, next) {
   mongoose.connection.db.dropDatabase()
   res.send("ok");
@@ -13,9 +14,14 @@ router.get('/reset', function(req, res, next) {
 router.get('/seed', function(req, res, next) {
   let quest = new Question({body: "test", posted: new Date(), possibleAnswers: ["Answer 1", "Answer 2"]});
   let quest2 = new Question({body: "test2", posted: new Date(), possibleAnswers: ["Answer 1"]});
- 
+  
+  let exhibitor = new Exhibitor({name: "jan", category:"Test"});
+  let exhibitor2 = new Exhibitor({name: "jan", category:"Test2"});
+  let exhibitor3 = new Exhibitor({name: "jan", category:"Test3"});
+
   let query = Question.insertMany([quest, quest2]);
-  query.then(() => res.send("seeding ok"));
+  let query2 = Exhibitor.insertMany([exhibitor, exhibitor2, exhibitor3])
+  query.then(() => query2.then(() =>res.send("seeding ok")));
   
 });
 

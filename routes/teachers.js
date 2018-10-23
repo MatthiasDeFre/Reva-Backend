@@ -17,7 +17,7 @@ router.get('/codes', function (req, res, next) {
 
 /* GET all questions with possible answers. */
 router.get('/questions', function (req, res, next) {
-  let query = Question.find({});
+  let query = Question.find({}).populate("exhibitor");
   query.exec(function (err, questions) {
     if (err || questions.length == 0)
       return next(new Error("No questions found"));
@@ -28,22 +28,21 @@ router.get('/questions', function (req, res, next) {
 
 /* GET all questions with answers from groups from the given . */
 router.get('/groupquestions', function (req, res, next) {
-  let query = Group.find({ "teacherId": req.query.teacherId }).populate("answers.question");
+  //GET TEACHER FROM AUTH
+  let query = Group.find({ "teacherId": 0 }, "name imageString answers.answer").populate({path: "answers.question", populate: {path: "exhibitor"}});
   query.exec(function (err, groups) {
     if (err || groups.length == 0)
       return next(new Error("No questions found"));
     let questionArray = [];
     groups.forEach(group => {
+     
       group.answers.forEach(answer => {
+        console.log(answer)
         //Check if its possible to change answer.question instead of creating new object
-        answer.question = "test"
-        let test = {
-          group: { name: group.name, image: group.imageString },
-          //question: {body: answer.question.body, possibleAnswers: answer.question.possibleAnswers},
-          question: answer.question,
-          answer: answer.answer
-        }
-        questionArray.push(test)
+       let question = answer.question.toObject();
+        question.group = {name: group.name};
+        question.answer = {answer: answer.answer};
+        questionArray.push(question)
       })
 
     });
@@ -53,8 +52,9 @@ router.get('/groupquestions', function (req, res, next) {
 });
 
 router.post('/makegroups', function (req, res, next) {
-  let amount = req.query.amount;
+  let amount = req.body.amount;
 
+  console.log(req.body)
   //TODO Get teacher id from auth method
   let groups = [];
   //Vraag voor async code te checken
@@ -63,7 +63,7 @@ router.post('/makegroups', function (req, res, next) {
      
       groups.push(new Group({ teacherId: 0, code: generateCode(codes) }));
     }
-    Group.insertMany(groups, () => res.send(groups));
+    Group.insertMany(groups, () => res.json(groups));
   }) 
   
   /*for (var i = 0; i < amount; i++) {
@@ -90,11 +90,9 @@ router.delete("/removegroups", function (req, res, next) {
   })
 })
 
-router.delete("/removegroup/", function (req, res, next) {
-  Group.findById(req.query.group).select({"name": 1}).exec(function (err, group) {
+router.delete("/removegroup/:group", function (req, res, next) {
+  let group = req.group;
     console.log(group)
-    if (err)
-      next(new Error("error"))
     if (group == null) {
       return next(new Error(""))
     }
@@ -110,7 +108,7 @@ router.delete("/removegroup/", function (req, res, next) {
       res.status(400)
       res.send("Group has been chosen")
     }
-  })
+  
   //VRAGEN WELKE BETER IS
   /* if(req.group == null) {
      return next(new Error(""))
@@ -130,6 +128,7 @@ router.delete("/removegroup/", function (req, res, next) {
 })
 //Get group
 router.param("group", function (req, res, next, id) {
+  console.log(id);
   let query = Group.findById(id).select({ "code": 1, "name": 1 }).exec(function (err, group) {
     if (err) {
       return next(new Error("Group not found"));
