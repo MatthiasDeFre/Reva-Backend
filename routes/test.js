@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 let mongoose = require('mongoose');
+let ObjectID = require('mongodb').ObjectID;
 
 let Question = mongoose.model('Question');
 let Group = mongoose.model("Group");
@@ -11,18 +12,19 @@ router.get('/reset', function(req, res, next) {
   res.send("ok");
 });
 
-router.get('/seed', function(req, res, next) {
-  let quest = new Question({body: "test", posted: new Date(), possibleAnswers: ["Answer 1", "Answer 2"]});
-  let quest2 = new Question({body: "test2", posted: new Date(), possibleAnswers: ["Answer 1"]});
-  
+router.get('/seed', function(req, res, next) { 
   let exhibitor = new Exhibitor({name: "jan", category:"Test"});
   let exhibitor2 = new Exhibitor({name: "jan", category:"Test2"});
   let exhibitor3 = new Exhibitor({name: "jan", category:"Test3"});
 
+  let quest = new Question({body: "test", posted: new Date(), possibleAnswers: ["Answer 1", "Answer 2"], exhibitor: exhibitor._id});
+  let quest2 = new Question({body: "test2", posted: new Date(), possibleAnswers: ["Answer 1"],exhibitor: exhibitor2._id});
+  
+  let group = new Group({teacherId: 0, name: "Groep 1", code: "qsdfd",imageString: "/tijdCodeVoorUniek",answers:[{answer:"een antwoord", question: quest._id}] })
   let query = Question.insertMany([quest, quest2]);
   let query2 = Exhibitor.insertMany([exhibitor, exhibitor2, exhibitor3])
-  query.then(() => query2.then(() =>res.send("seeding ok")));
-  
+  let query3 = Group.insertMany([group])
+  query2.then(() => query.then(() =>query3.then(() =>res.send("seeding ok"))));
 });
 
 //Create group with force added questions

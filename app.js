@@ -30,7 +30,7 @@ let cors = require('cors');
 app.use(cors({origin: "*", credentials: true}));
 
 
-console.log(" ___      ___             ____\n|   \\    |     \\       / /    \\\n| ___\\   |___   \\     / /______\\\n|     \\  |       \\   / /        \\\n|      \\ |___     \\./ /          \\\n====================================\n:: Node.js Backend ::  (v0.2.6.ALHPA)")
+console.log(" ___      ___             ____\n|   \\    |     \\       / /    \\\n| ___\\   |___   \\     / /______\\\n|     \\  |       \\   / /        \\\n|      \\ |___     \\./ /          \\\n====================================\n:: Node.js Backend ::  (v0.2.6.ALHPA)\nCopyright Team 07 XD")
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
