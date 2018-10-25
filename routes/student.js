@@ -27,27 +27,26 @@ router.get("/exhibitor/:group", function(req, res, next) {
   //if not resend last retrieved exhibitor
   if(group.answers.length > 0 && !group.answers[group.answers.length-1].answer) {
     console.log("has open question")
-    
-    //Put all open questions into an array
-    let questions = [];
-    group.answers.forEach(function(answer) {
-      if(!answer.answer)
-        questions.push(answer)
+    //SINGLE QUESTION
+    Answer.populate(group.answers[group.answers.length-1], {select: "body", path: "question", populate: {path: "exhibitor"}}, function(err, answerpop){
+      let exhibitorObject = answerpop.question.exhibitor.toObject();
+      exhibitorObject.question = {_id:answerpop.question._id, body: answerpop.question.body};
+      res.json(exhibitorObject);
     });
-
-    //Data model should be valid so questions[0] exhibitor == questions[n]
-    //If not = not our problem ¯\_(ツ)_/¯
-    Answer.populate(questions,{path: "question", select: "body exhibitor"}, function(err, answerpop) {
-    /*  let exhibitorObject = answerpop.question.exhibitor.toObject();
-      exhibitorObject.questions = questions;*/
-    
-      Exhibtor.findById(questions[0].question.exhibitor, function(err, exhibitor) {
-        let exhibitorObject = exhibitor.toObject();
-        exhibitorObject.questions = questions;
-        res.json(exhibitorObject);
-      });
-    })
-    
+    //MULTIPLE QUESTIONS
+    /*Group.populate(group, {select: "body", path: "answers.question", populate: {path: "exhibitor",}}, function(err, questions) {
+      //TO DO Check if all exhibitor share the same id, if not data model is broken and group should be removed
+      let exhibitorObject = questions.answers[questions.answers.length-1].question.exhibitor.toObject();
+     exhibitorObject.questions = [];
+     let tempQuestions = questions.answers.filter(value => {
+       return !value.answer
+     })
+     tempQuestions.forEach(question =>{
+      console.log(questions)
+      exhibitorObject.questions.push({_id: question.question._id, body: question.question.body})
+     }); 
+      res.json(exhibitorObject);
+    })*/
   } else {
   //TODO Check if all previous answers have been filled in
 
@@ -56,10 +55,16 @@ router.get("/exhibitor/:group", function(req, res, next) {
     Question.find({exhibitor: exhibitor._id}, {body:1}).exec(function(err, questions) {
       let exhibitorObject = exhibitor.toObject()
       console.log(exhibitor._id)
-      exhibitorObject.questions= questions;
+
+      //SINGLE QUESTION
+      let question = questions[Math.floor(Math.random()*questions.length)];
+      exhibitorObject.question= question;
+      group.answers.push(new Answer({question: question._id}))
+      //MULTIPLE QUESTIONS
+     /* exhibitorObject.questions= questions;
       questions.forEach(question => {
         group.answers.push(new Answer({question: question._id}))
-      })
+      })*/
       group.save(function(err) {
         res.json(exhibitorObject)
       })

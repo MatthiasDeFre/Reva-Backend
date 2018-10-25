@@ -29,6 +29,7 @@ router.get('/questions', function (req, res, next) {
 /* GET all questions with answers from groups from the given . */
 router.get('/groupquestions', function (req, res, next) {
   //GET TEACHER FROM AUTH
+  //TO DO Filter out non answered questions (or not?)
   let query = Group.find({ "teacherId": 0 }, "name imageString answers.answer").populate({path: "answers.question", populate: {path: "exhibitor"}});
   query.exec(function (err, groups) {
     if (err || groups.length == 0)
@@ -53,8 +54,8 @@ router.get('/groupquestions', function (req, res, next) {
 
 router.post('/makegroups', function (req, res, next) {
   let amount = req.body.amount;
-
-  console.log(req.body)
+  console.log(amount)
+  if(amount > 0) {
   //TODO Get teacher id from auth method
   let groups = [];
   //Vraag voor async code te checken
@@ -63,8 +64,13 @@ router.post('/makegroups', function (req, res, next) {
      
       groups.push(new Group({ teacherId: 0, code: generateCode(codes) }));
     }
+    console.log(groups.length)
     Group.insertMany(groups, () => res.json(groups));
-  }) 
+  })      
+} else {
+  res.status(400);
+  res.send("Aantal moet meer dan 0 zijn")
+}
   
   /*for (var i = 0; i < amount; i++) {
     var test = generateCode();
