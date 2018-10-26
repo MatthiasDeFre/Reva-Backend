@@ -12,6 +12,7 @@ router.get('/reset', function(req, res, next) {
   res.send("ok");
 });
 
+//Method to seed database
 router.get('/seed', function(req, res, next) { 
   let exhibitor = new Exhibitor({name: "jan", category:"Test"});
   let exhibitor2 = new Exhibitor({name: "jan", category:"Test2"});
