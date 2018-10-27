@@ -6,9 +6,18 @@ let Exhibtor = mongoose.model('Exhibitor');
 let Question = mongoose.model('Question');
 let Answer = mongoose.model('Answer');
 /* GET home page. */
-router.get('/codes', function(req, res, next) {
-  
-  res.send([{code: "code"},{code:"code1"}, {code:"code2"}]);
+
+//GET Group
+router.get('/group/:code', function(req, res, next) {
+  let query = Group.findOne({code: req.params.code},function(err, group){
+ 
+    if(err || group == null) {
+      res.status(404)
+      res.json("Not found")
+    } else {
+      res.json(group)
+    }
+  })
 });
 
 /*GET Existing categories*/ 

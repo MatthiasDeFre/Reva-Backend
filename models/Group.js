@@ -11,7 +11,7 @@ var GroupSchema = mongoose.Schema({
     //Change to objectId later
     teacherId: {type: Number, index: true},
     name: String,
-    code : String,
+    code : {type: String, unique: true},
     imageString: String,
     answers: [AnswerSchema]
 })

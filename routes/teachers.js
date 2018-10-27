@@ -59,10 +59,22 @@ router.post('/makegroups', function (req, res, next) {
   //TODO Get teacher id from auth method
   let groups = [];
   //Vraag voor async code te checken
-  Group.find({}, {_id: -1,code :1}).exec(function(err, codes){
+  //TEST ASYNC
+ let counter = {counter:5};
+ let promiseArray = [];
+
+  
+  Group.find({}, {_id: 0,code :1}).exec(function(err, codes){
+   var codes = Object.keys(codes).map(function(key) {
+    return codes[key].code;
+  });
     for(let i = 0; i < amount;i++) {
-     
-      groups.push(new Group({ teacherId: 0, code: generateCode(codes) }));
+     let group = new Group({ teacherId: 0 });
+     let codeObject = generateCode(codes);
+    
+      codes = codeObject.codes;
+      
+      groups.push(new Group({ teacherId: 0, code: codeObject.code }));
     }
     console.log(groups.length)
     Group.insertMany(groups, () => res.json(groups));
@@ -145,9 +157,45 @@ router.param("group", function (req, res, next, id) {
   });
 
 })
-
-
-
+function generateGroupLoop(counterObject) {
+  
+  findGroupAsync().then(generateCodeAsync().then(function(code) {
+    let group = new Group({teacherId:0, code: code});
+    group.save((err)=> {
+      counter.counter--;
+      if(counter.counter!=0) {
+        //Keep going with loop
+        generateGroupLoop(counterObject);
+      }
+    });
+  }))
+}
+function generateCodeAsync() {
+  let unique = false;
+  let code;
+  return findGroupAsync().then((group) => {
+    if(group == null)
+      generateCodeAsync().then(function(codeR) {
+        code = codeR;
+      });
+    else
+      return code;
+  })   
+}
+function testAsync() {
+  return findGroupAsync().then((response) => {
+    if(response.response == null)
+      return findGroupAsync();
+    else
+      return new Group({teacherId: 0, code: response.code}).save();
+  })
+}
+function findGroupAsync(code) {
+  
+  return Group.find({code: code}).exec(function(response) {
+      return {response: response, code: code};
+  })
+}
 function generateCode(codes) {
   let code = Math.random().toString(36).substring(2, 7);
 
@@ -156,7 +204,8 @@ function generateCode(codes) {
   //Check if code exists
   if(codes.includes(code))
     return generateCode(codes)
-  return code;
+   codes.push(code); 
+  return {code: code, codes: codes};
  /* let query = Group.findOne({ "code": code });
   return query.exec(function (err, group) {
 
