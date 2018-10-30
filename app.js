@@ -44,6 +44,7 @@ app.use('/users', users);
 app.use("/API/general", general);
 app.use("/API/teachers", teachers);
 app.use("/API/student", students);
+app.use("/API/ergo", ergoStudents);
 app.use("/API/test", test);
 //app.use("/API/ergo", ergoStudents);
 

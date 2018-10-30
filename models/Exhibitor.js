@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 var ExhibitorSchema = mongoose.Schema({
     name: String,
-    visits : Number,
+    score : Number,
     category : {type: String, index: true, default: "Andere"},
 })
 
