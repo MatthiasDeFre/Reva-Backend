@@ -40,8 +40,11 @@ router.get("/exhibitor/:group", function(req, res, next) {
     Answer.populate(group.answers[group.answers.length-1], {select: "body", path: "question", populate: {path: "exhibitor"}}, function(err, answerpop){
       let exhibitorObject = answerpop.question.exhibitor.toObject();
       exhibitorObject.question = {_id:answerpop.question._id, body: answerpop.question.body};
-      res.json(exhibitorObject);
-    });
+      answerpop.question.exhibitor.visits++;
+      answerpop.question.exhibitor.save(() => {
+        res.json(exhibitorObject);
+      });
+    })
     //MULTIPLE QUESTIONS
     /*Group.populate(group, {select: "body", path: "answers.question", populate: {path: "exhibitor",}}, function(err, questions) {
       //TO DO Check if all exhibitor share the same id, if not data model is broken and group should be removed
