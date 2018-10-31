@@ -19,6 +19,7 @@ require("./models/Group");
 
 var index = require('./routes/index');
 var users = require('./routes/users');
+var admin = require('./routes/admin');
 var general = require('./routes/general');
 var teachers = require('./routes/teachers');
 var students = require('./routes/student');
@@ -45,6 +46,7 @@ app.use("/API/general", general);
 app.use("/API/teachers", teachers);
 app.use("/API/student", students);
 app.use("/API/test", test);
+app.use("/API/admin", admin);
 //app.use("/API/ergo", ergoStudents);
 
 // catch 404 and forward to error handler
