@@ -5,7 +5,30 @@ let Group = mongoose.model('Group');
 let Exhibtor = mongoose.model('Exhibitor');
 let Question = mongoose.model('Question');
 let Answer = mongoose.model('Answer');
-/* GET home page. */
+
+//Multer setup
+var multer  = require('multer');
+var storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, 'uploads'),
+  filename: (req, file, cb) => {
+    console.log("changen names");
+    console.log("name" + file.originalname);
+    if(!file.originalname.match(/\.(jpeg|png|jpg|wav)$/)) {
+      console.log("error");
+      var err = new Error();
+      err.code = 'filetype';
+      return cb(err);
+    } else  {
+      console.log("done") 
+      cb(null, + Date.now() + "_" + file.originalname);
+    }
+   } 
+});
+var upload = multer({ 
+  storage: storage,
+  limits: {fileSize: 10000000}
+});
+
 
 //GET Group
 router.get('/group/:code', function(req, res, next) {
@@ -30,7 +53,6 @@ router.get("/categories", function(req, res, next) {
 
 //GET the next exhibitor with questions
 router.get("/exhibitor/:group", function(req, res, next) {
-  console.log("test")
   let group = req.group;
   //Check if previous answer has been filled in => 
   //if not resend last retrieved exhibitor
@@ -84,6 +106,26 @@ router.get("/exhibitor/:group", function(req, res, next) {
   })
 }
 });
+
+//Set name, body, img, categories of a group
+router.post('/register/:group', upload.single('groupImage'), function(req, res, next) {
+  if(!(req.file && req.body.name && req.body.description)) {
+    res.status(400)
+    res.send("Er zijn lege velden") 
+  } else {
+  let group = req.group;
+  
+ group.imageString = req.file.filename; 
+ group.name = req.body.name;
+ group.description = req.body.description;
+  group.save((err, group) => {
+    if(err)
+      return next(err)
+    res.json(group)
+  })     
+ }
+ });
+ 
 //Answer a question for the given group
 //Method gets the group and then appends the answer to the answerstring property of the last answer object
 router.post('/answer/:group', function(req, res, next) {
