@@ -13,6 +13,7 @@ var GroupSchema = mongoose.Schema({
     name: String,
     code : {type: String, unique: true},
     imageString: String,
+    description: String,
     answers: [AnswerSchema]
 })
 
