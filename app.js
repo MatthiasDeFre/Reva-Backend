@@ -4,7 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+let passport = require('passport');
 //Mongoose setup
 var mongoose = require('mongoose');
 
@@ -15,7 +15,8 @@ require("./models/Category");
 require("./models/Exhibitor");
 require("./models/Question");
 require("./models/Group");
-
+require("./models/User");
+require('./config/passport');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -39,9 +40,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(passport.initialize());
 
+//ROUTING PATHS
 app.use('/', index);
-app.use('/users', users);
+app.use('/API/users', users);
 app.use("/API/general", general);
 app.use("/API/teachers", teachers);
 app.use("/API/student", students);
