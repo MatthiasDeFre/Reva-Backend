@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 let mongoose = require('mongoose');
 let Question = mongoose.model('Question');
+let Exhibitor = mongoose.model('Exhibitor');
 /* GET home page. */
 router.get('/questions', function(req, res, next) {
   //FILTER FOR STUDENTNUMBER
@@ -13,6 +14,27 @@ router.get('/questions', function(req, res, next) {
     res.json(questions);
   });
 });
+
+/*GET filtered exhibitors*/
+router.get('/exhibitors', function(req, res, next) {
+  let query = Exhibitor.find({category:req.query.category}).select("name");
+  query.exec(function (err, exhibitors) {
+    console.log(exhibitors)
+    if (err || exhibitors.length == 0)
+      return next(new Error("No exhibitors found"));
+      console.log(exhibitors)
+    res.json(exhibitors);
+  });
+});
+
+/*GET Existing categories*/ 
+router.get("/categories", function(req, res, next) {
+  let query = Exhibtor.find().distinct("category", function(err, categories){
+    console.log(categories)
+    res.json(categories);
+  });
+})
+
 /* GET home page. */
 router.post('/question/', function(req, res, next) {
   let question = new Question({body: req.body.body, possibleAnswers: req.body.possibleAnswers, exhibitor: req.exhibitor._id, posted: new Date()});
