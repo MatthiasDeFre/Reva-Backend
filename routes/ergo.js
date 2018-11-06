@@ -24,18 +24,18 @@ router.get('/exhibitors', function(req, res, next) {
    query = Exhibitor.find({}).select("name");    
   }
    query.exec(function (err, exhibitors) {
-    console.log(exhibitors)
+//    console.log(exhibitors)
     if (err || exhibitors.length == 0)
       return next(new Error("No exhibitors found"));
-      console.log(exhibitors)
+     // console.log(exhibitors)
     res.json(exhibitors);
   });
 });
 
 /*GET Existing categories*/ 
 router.get("/categories", function(req, res, next) {
-  let query = Exhibtor.find().distinct("category", function(err, categories){
-    console.log(categories)
+  let query = Exhibitor.find().distinct("category", function(err, categories){
+    console.log(categories + "categories loaded?" + categories);
     res.json(categories);
   });
 })
@@ -77,4 +77,10 @@ router.param("question", function (req, res, next, id) {
     return next();
   });
 })
+/*  router.delete("/removequestions", function (req, res, next) {
+  Question.deleteMany({ ?????Id: 0 }, function (err, response) {
+    res.status(204);
+    res.send("Questions deleted")
+  })
+})  */
 module.exports = router;
