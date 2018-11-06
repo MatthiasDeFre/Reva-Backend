@@ -17,8 +17,13 @@ router.get('/questions', function(req, res, next) {
 
 /*GET filtered exhibitors*/
 router.get('/exhibitors', function(req, res, next) {
-  let query = Exhibitor.find({category:req.query.category}).select("name");
-  query.exec(function (err, exhibitors) {
+  let query;
+  if(req.query.category) {
+   query = Exhibitor.find({category:req.query.category}).select("name");   
+  } else {
+   query = Exhibitor.find({}).select("name");    
+  }
+   query.exec(function (err, exhibitors) {
     console.log(exhibitors)
     if (err || exhibitors.length == 0)
       return next(new Error("No exhibitors found"));
