@@ -130,7 +130,16 @@ router.post('/register/:group', upload.single('groupImage'), function(req, res, 
 //Method gets the group and then appends the answer to the answerstring property of the last answer object
 router.post('/answer/:group', function(req, res, next) {
  let group = req.group;
- let answers = req.body.answers;
+//SINGLE QUESTION
+let answer = req.body.answer;
+group.answers[groups.answers.length].answer=answer;
+ group.save(function(err) {
+  if (err) { return next(err); }   
+  //check what to return
+  res.json("ok");
+});
+ //MULTIPLE QUESTIONS
+ /*let answers = req.body.answers;
  console.log(req.body)
  let countdown = answers.length;
  answers.forEach(answer => {
@@ -142,7 +151,7 @@ router.post('/answer/:group', function(req, res, next) {
   if (err) { return next(err); }   
   //check what to return
   res.json("ok");
-});
+});*/
 });
 
 //Get group
