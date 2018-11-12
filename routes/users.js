@@ -34,10 +34,10 @@ router.post('/register', function(req, res, next) {
   if (req.body.username.length < 4 || req.body.password < 6) {
     return res.status(400).json({ message: 'Fields to short' });
   }
-  
+ 
   let user = new User();
-  user.name = req.body.name;
-  user.email = red.body.email;
+  user.name = req.body.name
+  user.email = req.body.username;
   user.setPassword(req.body.password);
   user.save(function(err) {
     if (err) {
