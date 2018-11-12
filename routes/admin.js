@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 let mongoose = require('mongoose');
 let Exhibitor = mongoose.model('Exhibitor');
+let Category = mongoose.model('Category');
 /* GET home page. */
 router.get('/exhibitors', function(req, res, next) {
   //FILTER FOR STUDENTNUMBER
@@ -13,9 +14,22 @@ router.get('/exhibitors', function(req, res, next) {
     res.json(exhibitors);
   });
 });
+/*GET All categories*/
+/* GET home page. */
+router.get('/categories', function(req, res, next) {
+  //FILTER FOR STUDENTNUMBER
+  let query = Category.find({});
+  query.exec(function (err, categories) {
+    if (err || categories.length == 0)
+      return next(new Error("No categories found"));
+      categories = categories.map(c => c.name)
+    res.json(categories);
+  });
+}); 
 /* GET home page. */
 router.post('/exhibitor/', function(req, res, next) {
-  let exhibitor = new Exhibitor({name: req.body.name, category: req.body.category});
+  console.log(req.body)
+  let exhibitor = new Exhibitor({name: req.body._name, category: req.body._category});
   exhibitor.save(function(err, exhibitor){
     if(err)
       return next(err)

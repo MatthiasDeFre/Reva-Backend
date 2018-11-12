@@ -35,16 +35,18 @@ router.get('/exhibitors', function(req, res, next) {
 /*GET Existing categories*/ 
 router.get("/categories", function(req, res, next) {
   let query = Exhibitor.find().distinct("category", function(err, categories){
-    console.log(categories + "categories loaded?" + categories);
     res.json(categories);
   });
 })
 
 /* GET home page. */
 router.post('/question/', function(req, res, next) {
-  let question = new Question({body: req.body.body, possibleAnswers: req.body.possibleAnswers, exhibitor: req.exhibitor._id, posted: new Date()});
-  question.save(function(err, question){
-    if(err)
+  console.log(req.body)
+  let question = new Question({body: req.body._body, possibleAnswers: req.body._answers, exhibitor: req.body._exhibitor._id, posted: new Date()});
+  
+   question.save(function(err, question){
+    console.log(err)
+     if(err)
       return next(err)
     //Populate exhibitor
     res.json(question);

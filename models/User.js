@@ -8,10 +8,7 @@ let UserSchema = new mongoose.Schema({
   hash: String,
   salt: String,
   avatar: String,
-  admin : {
-    type: Boolean,
-    default: false
-  } 
+  roles : [String]
 });
 
 UserSchema.methods.setPassword = function(password) {

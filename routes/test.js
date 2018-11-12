@@ -7,6 +7,7 @@ let Question = mongoose.model('Question');
 let Group = mongoose.model("Group");
 let Answer = mongoose.model("Answer")
 let Exhibitor = mongoose.model("Exhibitor")
+let Category = mongoose.model("Category")
 router.get('/reset', function(req, res, next) {
   mongoose.connection.db.dropDatabase()
   res.send("ok");
@@ -14,18 +15,24 @@ router.get('/reset', function(req, res, next) {
 
 //Method to seed database
 router.get('/seed', function(req, res, next) { 
-  let exhibitor = new Exhibitor({name: "jan", category:"Test"});
-  let exhibitor2 = new Exhibitor({name: "jan", category:"Test2"});
-  let exhibitor3 = new Exhibitor({name: "jan", category:"Test3"});
+  let exhibitor = new Exhibitor({name: "RolStoel Inc", category:"Rolstoelen"});
+  let exhibitor2 = new Exhibitor({name: "Sport & Co.", category:"Sport"});
+  let exhibitor3 = new Exhibitor({name: "Hulpmiddel.com", category:"Hulpmiddelen"});
 
-  let quest = new Question({body: "test", posted: new Date(), possibleAnswers: ["Answer 1", "Answer 2"], exhibitor: exhibitor._id});
-  let quest2 = new Question({body: "test2", posted: new Date(), possibleAnswers: ["Answer 1"],exhibitor: exhibitor2._id});
+  let quest = new Question({body: "Uit welk materiaal wordt een rolstoel gemaakt?", posted: new Date(), possibleAnswers: ["Aluminium", "Titanium"], exhibitor: exhibitor._id});
+  let quest2 = new Question({body: "Met hoeveel wordt een match van rolstoel voetbal gespeeld?", posted: new Date(), possibleAnswers: ["11"],exhibitor: exhibitor2._id});
   
   let group = new Group({teacherId: 0, name: "Groep 1", code: "qsdfd",imageString: "/tijdCodeVoorUniek",answers:[{answer:"een antwoord", question: quest._id}] })
+  
+  let category = new Category({name: "Rolstoelen"});
+  let category2 = new Category({name: "Hulpmiddellen"});
+  let category3 = new Category({name: "Sport"});
+
   let query = Question.insertMany([quest, quest2]);
   let query2 = Exhibitor.insertMany([exhibitor, exhibitor2, exhibitor3])
   let query3 = Group.insertMany([group])
-  query2.then(() => query.then(() =>query3.then(() =>res.send("seeding ok"))));
+  let query4 = Category.insertMany([category, category2, category3])
+  query2.then(() => query.then(() =>query3.then(() =>query4.then(() =>res.send("seeding ok")))));
 });
 
 //Create group with force added questions

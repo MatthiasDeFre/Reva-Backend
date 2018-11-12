@@ -4,6 +4,7 @@ let mongoose = require('mongoose');
 let Question = mongoose.model('Question');
 let Group = mongoose.model('Group');
 let Answer = mongoose.model('Answer');
+var path = require('path');
 /* GET home page. */
 router.get('/codes', function (req, res, next) {
   //GET TEACHER ID FROM INJECTION AUTH SERVICE
@@ -50,6 +51,19 @@ router.get('/groupquestions', function (req, res, next) {
     //console.log(questionArray)
     res.json(questionArray);
   });
+});
+
+/*GET Single group*/
+router.get("/group/:group", function(req,res,next){
+ Group.populate(req.group,{path: "answers.question", populate: {path:"exhibitor"}},function(err, group) {
+  console.log(group)
+  res.json(group);
+ });
+});
+
+/*GET image*/ 
+router.get("/image/:imageString", function(req, res,next) {
+  res.sendFile(path.resolve("uploads/"+req.params.imageString));
 });
 
 router.post('/makegroups', function (req, res, next) {
@@ -148,7 +162,7 @@ router.delete("/removegroup/:group", function (req, res, next) {
 //Get group
 router.param("group", function (req, res, next, id) {
   console.log(id);
-  let query = Group.findById(id).select({ "code": 1, "name": 1 }).exec(function (err, group) {
+  let query = Group.findById(id).select({}).exec(function (err, group) {
     if (err) {
       return next(new Error("Group not found"));
     }
