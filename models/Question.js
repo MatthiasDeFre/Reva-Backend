@@ -4,6 +4,7 @@ var QuestionSchema = mongoose.Schema({
     body: String,
     posted: Date,
     possibleAnswers: [String],
+    type : String,
     exhibitor: {type: mongoose.Schema.Types.ObjectId, ref: "Exhibitor"}
 
 })

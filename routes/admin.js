@@ -40,6 +40,7 @@ router.put('/exhibitor/:exhibitor', function(req, res, next) {
   let exhibitor = req.exhibitor;
   exhibitor.name = req.body.name;
   exhibitor.category = req.body.category;
+  exhibitor.coordinates = req.body.coordinates
   res.send(exhibitor);
 });
 router.delete('/exhibitor/:exhibitor', function(req, res, next) {

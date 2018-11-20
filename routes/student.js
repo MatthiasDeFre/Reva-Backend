@@ -5,7 +5,7 @@ let Group = mongoose.model('Group');
 let Exhibtor = mongoose.model('Exhibitor');
 let Question = mongoose.model('Question');
 let Answer = mongoose.model('Answer');
-
+let CategoryEx = mongoose.model('CategoryEx');
 //Multer setup
 var multer  = require('multer');
 var storage = multer.diskStorage({
@@ -22,7 +22,7 @@ var storage = multer.diskStorage({
       console.log("done") 
       cb(null, + Date.now() + "_" + file.originalname);
     }
-   } 
+   }
 });
 var upload = multer({ 
   storage: storage,
@@ -46,23 +46,24 @@ router.get('/group/:code', function(req, res, next) {
 /*GET Existing categories*/ 
 router.get("/categories", function(req, res, next) {
   let query = Exhibtor.find().distinct("category", function(err, categories){
-    console.log(categories)
     res.json(categories);
   });
 })
 
 //GET the next exhibitor with questions
-router.get("/exhibitor/:group", function(req, res, next) {
+router.post("/exhibitor/:group", function(req, res, next) {
   let group = req.group;
+  console.log(group)
   //Check if previous answer has been filled in => 
   //if not resend last retrieved exhibitor
   if(group.answers.length > 0 && !group.answers[group.answers.length-1].answer) {
     console.log("has open question")
     //SINGLE QUESTION
-    Answer.populate(group.answers[group.answers.length-1], {select: "body", path: "question", populate: {path: "exhibitor"}}, function(err, answerpop){
+    Answer.populate(group.answers[group.answers.length-1], {select: "body type counter", path: "question", populate: {path: "exhibitor"}}, function(err, answerpop){
       let exhibitorObject = answerpop.question.exhibitor.toObject();
-      exhibitorObject.question = {_id:answerpop.question._id, body: answerpop.question.body};
+      exhibitorObject.question = {_id:answerpop.question._id, body: answerpop.question.body, counter: answerpop.counter, type: answerpop.question.type};
       answerpop.question.exhibitor.visits++;
+      console.log(exhibitorObject)
       answerpop.question.exhibitor.save(() => {
         res.json(exhibitorObject);
       });
@@ -83,22 +84,39 @@ router.get("/exhibitor/:group", function(req, res, next) {
     })*/
   } else {
   //TODO Check if all previous answers have been filled in
-
-  Exhibtor.findOne({}).sort({visits: -1}).limit(1).exec(function(err, exhibitor) {
+  var categories = []
+  var exhibitors = []
+  group.categories.forEach(c => {
+    categories.push(c.name)
+    if(c.exhibitor)
+      exhibitors.push(c.exhibitor)
+  })
+  console.log(exhibitors)
+  console.log("end exhib")
+  Exhibtor.findOne({category: {$in: categories}, _id:{$nin: exhibitors}}).sort({visits: -1}).limit(1).exec(function(err, exhibitor) {
+    //If exhibitor => undefined (loosen query  => only exhibitor not categories))
     //Filter out all fields except body => PossibleAnswers = PossibleCheating
-    Question.find({exhibitor: exhibitor._id}, {body:1}).exec(function(err, questions) {
+    Question.find({exhibitor: exhibitor._id}, {}).exec(function(err, questions) {
       let exhibitorObject = exhibitor.toObject()
       console.log(exhibitor._id)
 
       //SINGLE QUESTION
-      let question = questions[Math.floor(Math.random()*questions.length)];
+      let question = questions[Math.floor(Math.random()*questions.length)].toObject();
+      question.counter = group.answers.length+1
       exhibitorObject.question= question;
-      group.answers.push(new Answer({question: question._id}))
+      console.log(group.categories[i])
+      for(var i=0; i< categories.length;i++) {
+        console.log(categories[i]==exhibitorObject.category)
+        if(categories[i]==exhibitorObject.category)
+        group.categories[i].exhibitor = exhibitorObject._id
+      }
+      group.answers.push(new Answer({question: question._id, counter: group.answers.length+1}))
       //MULTIPLE QUESTIONS
      /* exhibitorObject.questions= questions;
       questions.forEach(question => {
         group.answers.push(new Answer({question: question._id}))
       })*/
+      console.log(question)
       group.save(function(err) {
         res.json(exhibitorObject)
       })
@@ -109,15 +127,20 @@ router.get("/exhibitor/:group", function(req, res, next) {
 
 //Set name, body, img, categories of a group
 router.post('/register/:group', upload.single('groupImage'), function(req, res, next) {
-  if(!(req.file && req.body.name && req.body.description)) {
+  console.log("test")
+  if(!(req.file && req.body.name && req.body.description && req.body.categories)) {
     res.status(400)
     res.send("Er zijn lege velden") 
   } else {
   let group = req.group;
-  
+
  group.imageString = req.file.filename; 
  group.name = req.body.name;
  group.description = req.body.description;
+ console.log("body")
+ console.log( req.body.categories)
+ group.categories = req.body.categories.map(c => new CategoryEx({name: c.toString()}))
+ group.answers = []
   group.save((err, group) => {
     if(err)
       return next(err)
@@ -131,12 +154,13 @@ router.post('/register/:group', upload.single('groupImage'), function(req, res, 
 router.post('/answer/:group', function(req, res, next) {
  let group = req.group;
 //SINGLE QUESTION
+console.log(req.group)
 let answer = req.body.answer;
-group.answers[groups.answers.length].answer=answer;
- group.save(function(err) {
+group.answers[group.answers.length-1].answer=answer;
+ group.save(function(err, group) {
   if (err) { return next(err); }   
   //check what to return
-  res.json("ok");
+  res.json(group);
 });
  //MULTIPLE QUESTIONS
  /*let answers = req.body.answers;
@@ -153,10 +177,21 @@ group.answers[groups.answers.length].answer=answer;
   res.json("ok");
 });*/
 });
-
+router.post('/answerPhoto/:group',upload.single("photo"), function(req, res, next) {
+  let group = req.group;
+ //SINGLE QUESTION
+ console.log(req.group)
+ let answer = req.file.filename;
+ group.answers[group.answers.length-1].answer=answer;
+  group.save(function(err, group) {
+   if (err) { return next(err); }   
+   res.json(group);
+ });
+ });
 //Get group
 router.param("group", function(req, res, next, id) {
-  let query = Group.findById(id).select({"answers": 1}).exec(function(err, group) {
+  
+  let query = Group.findById(id).select("answers categories").exec(function(err, group) {
     if(err) {
       return next(new Error("Group not found"));
     }

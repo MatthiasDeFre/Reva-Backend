@@ -15,14 +15,14 @@ router.get('/reset', function(req, res, next) {
 
 //Method to seed database
 router.get('/seed', function(req, res, next) { 
-  let exhibitor = new Exhibitor({name: "RolStoel Inc", category:"Rolstoelen"});
-  let exhibitor2 = new Exhibitor({name: "Sport & Co.", category:"Sport"});
-  let exhibitor3 = new Exhibitor({name: "Hulpmiddel.com", category:"Hulpmiddelen"});
+  let exhibitor = new Exhibitor({name: "RolStoel Inc", category:"Rolstoelen", coordinates: {xCo: 600, yCo: 600}});
+  let exhibitor2 = new Exhibitor({name: "Sport & Co.", category:"Sport", coordinates: {xCo: 600, yCo: 600}});
+  let exhibitor3 = new Exhibitor({name: "Hulpmiddel.com", category:"Hulpmiddelen", coordinates: {xCo: 600, yCo: 600}});
 
-  let quest = new Question({body: "Uit welk materiaal wordt een rolstoel gemaakt?", posted: new Date(), possibleAnswers: ["Aluminium", "Titanium"], exhibitor: exhibitor._id});
-  let quest2 = new Question({body: "Met hoeveel wordt een match van rolstoel voetbal gespeeld?", posted: new Date(), possibleAnswers: ["11"],exhibitor: exhibitor2._id});
+  let quest = new Question({body: "Uit welk materiaal wordt een rolstoel gemaakt?", posted: new Date(), possibleAnswers: ["Aluminium", "Titanium"], exhibitor: exhibitor._id, type: "TEXT"});
+  let quest2 = new Question({body: "Met hoeveel wordt een match van rolstoel voetbal gespeeld?", posted: new Date(),exhibitor: exhibitor3._id,type:"PHOTO"});
   
-  let group = new Group({teacherId: 0, name: "Groep 1", code: "qsdfd",imageString: "/tijdCodeVoorUniek",answers:[{answer:"een antwoord", question: quest._id}] })
+  let group = new Group({teacherId: 0, name: "Groep 1", code: "1234",imageString: "/tijdCodeVoorUniek",answers:[{answer:"een antwoord", question: quest._id, counter: 1}] })
   
   let category = new Category({name: "Rolstoelen"});
   let category2 = new Category({name: "Hulpmiddellen"});
