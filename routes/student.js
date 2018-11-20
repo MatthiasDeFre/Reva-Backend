@@ -91,8 +91,7 @@ router.post("/exhibitor/:group", function(req, res, next) {
     if(c.exhibitor)
       exhibitors.push(c.exhibitor)
   })
-  console.log(exhibitors)
-  console.log("end exhib")
+
   Exhibtor.findOne({category: {$in: categories}, _id:{$nin: exhibitors}}).sort({visits: -1}).limit(1).exec(function(err, exhibitor) {
     //If exhibitor => undefined (loosen query  => only exhibitor not categories))
     //Filter out all fields except body => PossibleAnswers = PossibleCheating
@@ -104,9 +103,7 @@ router.post("/exhibitor/:group", function(req, res, next) {
       let question = questions[Math.floor(Math.random()*questions.length)].toObject();
       question.counter = group.answers.length+1
       exhibitorObject.question= question;
-      console.log(group.categories[i])
       for(var i=0; i< categories.length;i++) {
-        console.log(categories[i]==exhibitorObject.category)
         if(categories[i]==exhibitorObject.category)
         group.categories[i].exhibitor = exhibitorObject._id
       }

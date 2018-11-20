@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var CoordinateSchema = mongoose.Schema({
     xCo : Number,
     yCo : Number
- })
+ },{_id: false})
 var ExhibitorSchema = mongoose.Schema({
     name: String,
     score : Number,
@@ -13,3 +13,4 @@ var ExhibitorSchema = mongoose.Schema({
 
 
 mongoose.model('Exhibitor', ExhibitorSchema);
+mongoose.model('Coordinate', CoordinateSchema);

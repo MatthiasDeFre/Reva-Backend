@@ -3,6 +3,7 @@ var router = express.Router();
 let mongoose = require('mongoose');
 let Exhibitor = mongoose.model('Exhibitor');
 let Category = mongoose.model('Category');
+let Coordinate = mongoose.model('Coordinate');
 /* GET home page. */
 router.get('/exhibitors', function(req, res, next) {
   //FILTER FOR STUDENTNUMBER
@@ -28,7 +29,7 @@ router.get('/categories', function(req, res, next) {
 }); 
 /* GET home page. */
 router.post('/exhibitor/', function(req, res, next) {
-  console.log(req.body)
+  console.log(req)
   let exhibitor = new Exhibitor({name: req.body._name, category: req.body._category});
   exhibitor.save(function(err, exhibitor){
     if(err)
@@ -37,11 +38,13 @@ router.post('/exhibitor/', function(req, res, next) {
   })
 });
 router.put('/exhibitor/:exhibitor', function(req, res, next) {
+  console.log(req.body)
   let exhibitor = req.exhibitor;
-  exhibitor.name = req.body.name;
-  exhibitor.category = req.body.category;
-  exhibitor.coordinates = req.body.coordinates
-  res.send(exhibitor);
+  exhibitor.name = req.body._name;
+  exhibitor.category = req.body._category;
+  console.log(req.body._coordinates)
+  exhibitor.coordinates = new Coordinate({xCo: req.body._coordinates.xCo, yCo: req.body._coordinates.yCo})
+  res.json(exhibitor);
 });
 router.delete('/exhibitor/:exhibitor', function(req, res, next) {
   let exhibitor = req.exhibitor;
