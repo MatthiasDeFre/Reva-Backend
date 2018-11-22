@@ -38,13 +38,16 @@ router.post('/exhibitor/', function(req, res, next) {
   })
 });
 router.put('/exhibitor/:exhibitor', function(req, res, next) {
-  console.log(req.body)
+
   let exhibitor = req.exhibitor;
   exhibitor.name = req.body._name;
   exhibitor.category = req.body._category;
-  console.log(req.body._coordinates)
+
   exhibitor.coordinates = new Coordinate({xCo: req.body._coordinates.xCo, yCo: req.body._coordinates.yCo})
-  res.json(exhibitor);
+  exhibitor.save(function(err, exhibitor) {
+    res.json(exhibitor);
+  })
+
 });
 router.delete('/exhibitor/:exhibitor', function(req, res, next) {
   let exhibitor = req.exhibitor;
