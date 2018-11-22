@@ -97,7 +97,7 @@ router.post("/exhibitor/:group", function(req, res, next) {
     //Filter out all fields except body => PossibleAnswers = PossibleCheating
     Question.find({exhibitor: exhibitor._id}, {}).exec(function(err, questions) {
       let exhibitorObject = exhibitor.toObject()
-      console.log(exhibitor._id)
+     
 
       //SINGLE QUESTION
       let question = questions[Math.floor(Math.random()*questions.length)].toObject();
@@ -113,7 +113,7 @@ router.post("/exhibitor/:group", function(req, res, next) {
       questions.forEach(question => {
         group.answers.push(new Answer({question: question._id}))
       })*/
-      console.log(question)
+      console.log(exhibitorObject)
       group.save(function(err) {
         res.json(exhibitorObject)
       })
@@ -124,8 +124,8 @@ router.post("/exhibitor/:group", function(req, res, next) {
 
 //Set name, body, img, categories of a group
 router.post('/register/:group', upload.single('groupImage'), function(req, res, next) {
-  console.log("test")
-  if(!(req.file && req.body.name && req.body.description && req.body.categories)) {
+  console.log(req.body)
+  if(!(req.file && req.body.name && req.body.categories)) {
     res.status(400)
     res.send("Er zijn lege velden") 
   } else {
