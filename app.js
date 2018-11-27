@@ -16,6 +16,7 @@ require("./models/Exhibitor");
 require("./models/Question");
 require("./models/Group");
 require("./models/User");
+require("./models/Settings");
 require('./config/passport');
 
 var index = require('./routes/index');
