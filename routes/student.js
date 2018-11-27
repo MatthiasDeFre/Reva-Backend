@@ -137,7 +137,7 @@ router.post('/register/:group', upload.single('groupImage'), function(req, res, 
  console.log("body")
  console.log( req.body.categories)
  group.categories = req.body.categories.map(c => new CategoryEx({name: c.toString()}))
- group.answers = []
+ 
   group.save((err, group) => {
     if(err)
       return next(err)
