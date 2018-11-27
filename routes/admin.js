@@ -40,6 +40,7 @@ router.post('/exhibitor/', function (req, res, next) {
 });
 router.put('/exhibitor/:exhibitor', function (req, res, next) {
 
+
   let exhibitor = req.exhibitor;
   exhibitor.name = req.body._name;
   exhibitor.category = req.body._category;
@@ -53,24 +54,10 @@ router.put('/exhibitor/:exhibitor', function (req, res, next) {
 
 router.put('/settings/', function (req, res, next) {
 
-  console.log(req.settings)
   Settings.update({}, {$set: {studentCode: req.body._studentCode, teacherCode: req.body._teacherCode,expoDate : req.body._expoDate}}, function(err, settings){
     res.json(settings);
 
   });
-  /*
-  let settings = req.settings;
-  settings.studentCode = req.body._studentCode;
-  settings.teacherCode = req.body._teacherCode;
-  settings.expoDate = req.body._expoDate;
-
-  console.log(settings);
-
-  settings.save(function (err, settings) {
-    res.json(settings);
-
-
-  })*/
 
 });
 
@@ -102,6 +89,15 @@ router.param("exhibitor", function (req, res, next, id) {
     }
     console.log(exhibitor)
     req.exhibitor = exhibitor;
+    return next();
+  });
+})
+router.param("settings", function (req, res, next, id) {
+  let query = Settings.findById(id).exec(function (err, settings) {
+    if (err) {
+      return next(new Error("Settings not found"));
+    }
+    req.settings = settings;
     return next();
   });
 })
