@@ -3,6 +3,11 @@ var router = express.Router();
 let mongoose = require('mongoose');
 let Question = mongoose.model('Question');
 let Exhibitor = mongoose.model('Exhibitor');
+router.get('/question/:question', function(req, res, next) {
+  //FILTER FOR STUDENTNUMBER
+  res.json(req.question)
+});
+
 /* GET home page. */
 router.get('/questions', function(req, res, next) {
   //FILTER FOR STUDENTNUMBER

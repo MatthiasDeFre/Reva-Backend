@@ -89,7 +89,7 @@ let codesObject = [];
     
   
       
-      groups.push(new Group({ teacherId: 0, code: code }));
+      groups.push(new Group({ teacherId: 0, code: code, answers: [] }));
     }
     console.log(groups.length)
     Group.insertMany(groups, () => res.json(groups));
