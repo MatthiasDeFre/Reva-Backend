@@ -34,7 +34,7 @@ UserSchema.methods.generateJWT = function() {
       _id: this._id,
       name: this.name,
       email: this.email,
-      admin: this.admin,
+      role: this.role,
       exp: parseInt(exp.getTime() / 1000)
     },
     process.env.BACKEND_SECRET
