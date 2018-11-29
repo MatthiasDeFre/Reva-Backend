@@ -133,6 +133,15 @@ router.param("exhibitor", function (req, res, next, id) {
     return next();
   });
 })
+router.param("settings", function (req, res, next, id) {
+  let query = Settings.findById(id).exec(function (err, settings) {
+    if (err) {
+      return next(new Error("Settings not found"));
+    }
+    req.settings = settings;
+    return next();
+  });
+})
 router.param("category", function (req, res, next, id) {
   console.log(id);
   let query = Category.findById(id).exec(function (err, category) {
