@@ -28,6 +28,11 @@ router.get('/categories', function (req, res, next) {
     res.json(categories);
   });
 });
+
+router.get("/category/:category", function(req, res, next) {
+  
+  res.json(req.category);
+})
 /* GET home page. */
 router.post('/exhibitor/', function (req, res, next) {
   console.log(req)
@@ -38,6 +43,16 @@ router.post('/exhibitor/', function (req, res, next) {
     res.json(exhibitor);
   })
 });
+router.post("/category/", function(req, res, next) {
+  console.log(req.headers)
+  let category = new Category({name: req.body.name});
+  category.save(function(err, category) {
+    if(err)
+      return next(err)
+    res.status(201)
+    res.json(category)
+  })
+})
 router.put('/exhibitor/:exhibitor', function (req, res, next) {
 
   let exhibitor = req.exhibitor;
@@ -50,7 +65,13 @@ router.put('/exhibitor/:exhibitor', function (req, res, next) {
   })
 
 });
-
+router.put("/category/:category", function(req, res, next) {
+  let category = req.category;
+  category.name = req.body.name;
+  category.save((err, category) => {
+    res.json(category)
+  })
+})
 router.put('/settings/', function (req, res, next) {
 
   console.log(req.settings)
@@ -94,6 +115,13 @@ router.delete('/exhibitor/:exhibitor', function (req, res, next) {
     res.json(exhibitor)
   })
 });
+router.delete("/category/:category", function(req, res, next) {
+  req.category.remove(err => {
+    if(err)
+      return next(err)
+    res.json(req.category)
+  })
+})
 router.param("exhibitor", function (req, res, next, id) {
   console.log(id);
   let query = Exhibitor.findById(id).exec(function (err, exhibitor) {
@@ -102,6 +130,21 @@ router.param("exhibitor", function (req, res, next, id) {
     }
     console.log(exhibitor)
     req.exhibitor = exhibitor;
+    return next();
+  });
+})
+router.param("category", function (req, res, next, id) {
+  console.log(id);
+  let query = Category.findById(id).exec(function (err, category) {
+    console.log(category)
+    if (err) {
+      return next(new Error("Category not found"));
+    }
+    if(!category)
+      return res.status(404).send({message: "Categorie niet gevonden"})
+    
+    console.log(category)
+    req.category = category;
     return next();
   });
 })
