@@ -142,7 +142,6 @@ router.param("category", function (req, res, next, id) {
     }
     if(!category)
       return res.status(404).send({message: "Categorie niet gevonden"})
-    
     console.log(category)
     req.category = category;
     return next();
