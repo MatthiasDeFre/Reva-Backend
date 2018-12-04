@@ -24,16 +24,16 @@ router.get('/seed', function(req, res, next) {
   let user3 = new User({name: "Matthias De Fré", email:"admin_freddy@hotmail.com", hash: "a05f30cd9a3098a0a0f2a15f3d1c2b0976dcc04a2079e55fa0331e3dbf4a2f6d180affa03253fc304a365714d6ae1ceff0aace878d99f7b8c6af30bace991a92", salt: "5767c251aa5922f9721f9bc19a490b566d04802dce22ce4ae1dd5fb81e7f189c", role : "ADMIN"})
 
   let exhibitor = new Exhibitor({name: "RolStoel Inc", category:"Rolstoelen", coordinates: {xCo: 600, yCo: 600}});
-  let exhibitor2 = new Exhibitor({name: "Sport & Co.", category:"Sport", coordinates: {xCo: 600, yCo: 600}});
-  let exhibitor3 = new Exhibitor({name: "Hulpmiddel.com", category:"Hulpmiddelen", coordinates: {xCo: 600, yCo: 600}});
+  let exhibitor2 = new Exhibitor({name: "Sport & Co.", category:"Vakantie, reizen en sport", coordinates: {xCo: 600, yCo: 600}});
+  let exhibitor3 = new Exhibitor({name: "Hulpmiddel.com", category:"Hulpmiddelen ADL", coordinates: {xCo: 600, yCo: 600}});
   let exhibitor4 = new Exhibitor({name: "Scoot Scoot", category:"Scooters", coordinates: {xCo: 600, yCo: 600}});
   let exhibitor5 = new Exhibitor({name: "Tiller", category:"Tilhulpmiddelen", coordinates: {xCo: 600, yCo: 600}});
-  let exhibitor6 = new Exhibitor({name: "Loophul", category:"Loophulpmiddelen", coordinates: {xCo: 600, yCo: 600}});
-  let exhibitor7 = new Exhibitor({name: "Domonica", category:"Domotica", coordinates: {xCo: 600, yCo: 600}});
+  let exhibitor6 = new Exhibitor({name: "Loophul", category:"Loophulpmiddelen en rampen", coordinates: {xCo: 600, yCo: 600}});
+  let exhibitor7 = new Exhibitor({name: "Domonica", category:"Omgevingsbediening, domotica en besturing", coordinates: {xCo: 600, yCo: 600}});
   let exhibitor8 = new Exhibitor({name: "Lifter", category:"Huislifter", coordinates: {xCo: 600, yCo: 600}});
-  let exhibitor9 = new Exhibitor({name: "Neckerman", category:"Vakantie en reizen", coordinates: {xCo: 600, yCo: 600}});
+  let exhibitor9 = new Exhibitor({name: "Neckerman", category:"Vakantie, reizen en sport", coordinates: {xCo: 600, yCo: 600}});
   let exhibitor10 = new Exhibitor({name: "Big Brother Inc", category:"Overheidsdiensten", coordinates: {xCo: 600, yCo: 600}});
-  let exhibitor11 = new Exhibitor({name: "Zelfhulp", category:"Zelfhulpgroepen", coordinates: {xCo: 600, yCo: 600}});
+  let exhibitor11 = new Exhibitor({name: "Zelfhulp", category:"Belangenverenigingen en zelfhulpgroepen", coordinates: {xCo: 600, yCo: 600}});
 
 
   let quest = new Question({body: "Uit welk materiaal wordt een rolstoel gemaakt?", posted: new Date(), possibleAnswers: ["Aluminium", "Titanium"], exhibitor: exhibitor._id, type: "TEXT"});
@@ -50,16 +50,29 @@ router.get('/seed', function(req, res, next) {
 
   let group = new Group({teacherId: 0, code: "1234",imageString: "/tijdCodeVoorUniek" })
   
-  let category = new Category({name: "Rolstoelen"});
-  let category2 = new Category({name: "Hulpmiddellen"});
-  let category3 = new Category({name: "Sport"});
+  let category = new Category({name: "Aangepaste auto's"});
+  let category2 = new Category({name: "Aangepaste kledij"});
+  let category3 = new Category({name: "Belangenverenigingen en zelfhulpgroepen"});
+  let category4 = new Category({name: "Fietsen "});
+  let category5 = new Category({name: "Huisliften"});
+  let category6 = new Category({name: "Hulpmiddelen ADL"});
+  let category7 = new Category({name: "Hulpmiddelen voor kinderen"});
+  let category8 = new Category({name: "Loophulpmiddelen en rampen"});
+  let category9 = new Category({name: "Omgevingsbediening, domotica en besturing"});
+  let category10 = new Category({name: "Overheidsdiensten"});
+  let category11 = new Category({name: "Rolstoelen"});
+  let category12 = new Category({name: "Rolstoelen sport"});
+  let category13 = new Category({name: "Scooters"});
+  let category14 = new Category({name: "Tilhulpmiddelen"});
+  let category15 = new Category({name: "Vakantie, reizen en sport"});
+
 
   let settings = new Settings({studentCode: "9pu2z8RX3zBp7kPD",teacherCode:"b78MDPhDjuS9L44k",expoDate: new Date()})
 
   let query = Question.insertMany([quest, quest2,quest3,quest4,quest5,quest6,quest7,quest8,quest9,quest10,quest11]);
   let query2 = Exhibitor.insertMany([exhibitor, exhibitor2, exhibitor3,exhibitor4,exhibitor5,exhibitor6,exhibitor7,exhibitor8,exhibitor9,exhibitor10,exhibitor11])
   let query3 = Group.insertMany([group])
-  let query4 = Category.insertMany([category, category2, category3])
+  let query4 = Category.insertMany([category, category2, category3 ,category4 ,category5 ,category6 ,category7 ,category8 ,category9 ,category10 ,category11 ,category12 ,category13 ,category14 ,category15])
   let query5 = User.insertMany([user, user2, user3])
   let query6 = Settings.insertMany([settings])
   query2.then(() => query.then(() =>query3.then(() =>query4.then(() => query5.then(()  => query6.then(() => res.send("seeding ok")))))));
