@@ -63,6 +63,7 @@ router.post("/exhibitor/:group", function(req, res, next) {
       let exhibitorObject = answerpop.question.exhibitor.toObject();
       exhibitorObject.question = {_id:answerpop.question._id, body: answerpop.question.body, counter: answerpop.counter, type: answerpop.question.type};
       answerpop.question.exhibitor.visits++;
+      exhibitorObject.category = answerpop.question.category 
       console.log(exhibitorObject)
       answerpop.question.exhibitor.save(() => {
         res.json(exhibitorObject);
@@ -95,16 +96,18 @@ router.post("/exhibitor/:group", function(req, res, next) {
   Exhibtor.findOne({category: {$in: categories}, _id:{$nin: exhibitors}}).sort({visits: -1}).limit(1).exec(function(err, exhibitor) {
     //If exhibitor => undefined (loosen query  => only exhibitor not categories))
     //Filter out all fields except body => PossibleAnswers = PossibleCheating
-    Question.find({exhibitor: exhibitor._id}, {}).exec(function(err, questions) {
+    console.log(exhibitor)
+    Question.find({exhibitor: exhibitor._id, category: {$in: categories}}, {}).exec(function(err, questions) {
       let exhibitorObject = exhibitor.toObject()
-     
-
+      console.log(questions)
       //SINGLE QUESTION
       let question = questions[Math.floor(Math.random()*questions.length)].toObject();
       question.counter = group.answers.length+1
       exhibitorObject.question= question;
+
+      exhibitorObject.category = question.category 
       for(var i=0; i< categories.length;i++) {
-        if(categories[i]==exhibitorObject.category)
+        if(categories[i]==question.category)
         group.categories[i].exhibitor = exhibitorObject._id
       }
       group.answers.push(new Answer({question: question._id, counter: group.answers.length+1}))
@@ -115,7 +118,10 @@ router.post("/exhibitor/:group", function(req, res, next) {
       })*/
       console.log(exhibitorObject)
       group.save(function(err) {
-        res.json(exhibitorObject)
+        exhibitor.score += 1
+        exhibitor.save(err => {
+          res.json(exhibitorObject)
+        })
       })
     })
   })

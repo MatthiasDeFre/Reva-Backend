@@ -23,30 +23,30 @@ router.get('/seed', function(req, res, next) {
   let user2 = new User({name: "Matthias De Fré", email:"leerkracht_de_bakker@hotmail.com", hash: "a05f30cd9a3098a0a0f2a15f3d1c2b0976dcc04a2079e55fa0331e3dbf4a2f6d180affa03253fc304a365714d6ae1ceff0aace878d99f7b8c6af30bace991a92", salt: "5767c251aa5922f9721f9bc19a490b566d04802dce22ce4ae1dd5fb81e7f189c", role : "TEACHER"})
   let user3 = new User({name: "Matthias De Fré", email:"admin_freddy@hotmail.com", hash: "a05f30cd9a3098a0a0f2a15f3d1c2b0976dcc04a2079e55fa0331e3dbf4a2f6d180affa03253fc304a365714d6ae1ceff0aace878d99f7b8c6af30bace991a92", salt: "5767c251aa5922f9721f9bc19a490b566d04802dce22ce4ae1dd5fb81e7f189c", role : "ADMIN"})
 
-  let exhibitor = new Exhibitor({name: "RolStoel Inc", category:"Rolstoelen", coordinates: {xCo: 600, yCo: 600}});
-  let exhibitor2 = new Exhibitor({name: "Sport & Co.", category:"Sport", coordinates: {xCo: 600, yCo: 600}});
-  let exhibitor3 = new Exhibitor({name: "Hulpmiddel.com", category:"Hulpmiddelen", coordinates: {xCo: 600, yCo: 600}});
-  let exhibitor4 = new Exhibitor({name: "Scoot Scoot", category:"Scooters", coordinates: {xCo: 600, yCo: 600}});
-  let exhibitor5 = new Exhibitor({name: "Tiller", category:"Tilhulpmiddelen", coordinates: {xCo: 600, yCo: 600}});
-  let exhibitor6 = new Exhibitor({name: "Loophul", category:"Loophulpmiddelen", coordinates: {xCo: 600, yCo: 600}});
-  let exhibitor7 = new Exhibitor({name: "Domonica", category:"Domotica", coordinates: {xCo: 600, yCo: 600}});
-  let exhibitor8 = new Exhibitor({name: "Lifter", category:"Huislifter", coordinates: {xCo: 600, yCo: 600}});
-  let exhibitor9 = new Exhibitor({name: "Neckerman", category:"Vakantie en reizen", coordinates: {xCo: 600, yCo: 600}});
-  let exhibitor10 = new Exhibitor({name: "Big Brother Inc", category:"Overheidsdiensten", coordinates: {xCo: 600, yCo: 600}});
-  let exhibitor11 = new Exhibitor({name: "Zelfhulp", category:"Zelfhulpgroepen", coordinates: {xCo: 600, yCo: 600}});
+  let exhibitor = new Exhibitor({name: "RolStoel Inc", category:["Rolstoelen"], coordinates: {xCo: 600, yCo: 600}});
+  let exhibitor2 = new Exhibitor({name: "Sport & Co.", category:["Sport"], coordinates: {xCo: 600, yCo: 600}});
+  let exhibitor3 = new Exhibitor({name: "Hulpmiddel.com", category:["Hulpmiddelen"], coordinates: {xCo: 600, yCo: 600}});
+  let exhibitor4 = new Exhibitor({name: "Scoot Scoot", category:["Scooters"], coordinates: {xCo: 600, yCo: 600}});
+  let exhibitor5 = new Exhibitor({name: "Tiller", category:["Tilhulpmiddelen"], coordinates: {xCo: 600, yCo: 600}});
+  let exhibitor6 = new Exhibitor({name: "Loophul", category:["Loophulpmiddelen"], coordinates: {xCo: 600, yCo: 600}});
+  let exhibitor7 = new Exhibitor({name: "Domonica", category:["Domotica"], coordinates: {xCo: 600, yCo: 600}});
+  let exhibitor8 = new Exhibitor({name: "Lifter", category:["Huislifter"], coordinates: {xCo: 600, yCo: 600}});
+  let exhibitor9 = new Exhibitor({name: "Neckerman", category:["Vakantie en reizen"], coordinates: {xCo: 600, yCo: 600}});
+  let exhibitor10 = new Exhibitor({name: "Big Brother Inc", category:["Overheidsdiensten"], coordinates: {xCo: 600, yCo: 600}});
+  let exhibitor11 = new Exhibitor({name: "Zelfhulp", category:["Zelfhulpgroepen"], coordinates: {xCo: 600, yCo: 600}});
 
 
-  let quest = new Question({body: "Uit welk materiaal wordt een rolstoel gemaakt?", posted: new Date(), possibleAnswers: ["Aluminium", "Titanium"], exhibitor: exhibitor._id, type: "TEXT"});
-  let quest2 = new Question({body: "Met hoeveel wordt een match van rolstoel voetbal gespeeld?", posted: new Date(),exhibitor: exhibitor2._id,type:"TEXT"});
-  let quest3 = new Question({body: "Geef 3 voorbeelden van vaakgebruikte hulpmiddelen", posted: new Date(),exhibitor: exhibitor3._id,type:"TEXT"});
-  let quest4 = new Question({body: "Trek een foto van een loophulpmiddel?", posted: new Date(),exhibitor: exhibitor4._id,type:"PHOTO"});
-  let quest5 = new Question({body: "Trek een foto van een scooter?", posted: new Date(),exhibitor: exhibitor5._id,type:"PHOTO"});
-  let quest6 = new Question({body: "Trek een foto van een tilhulpmiddel?", posted: new Date(),exhibitor: exhibitor6._id,type:"PHOTO"});
-  let quest7 = new Question({body: "Trek een foto van een domitica hulpsysteem?", posted: new Date(),exhibitor: exhibitor7._id,type:"PHOTO"});
-  let quest8 = new Question({body: "Trek een foto van een huislift?", posted: new Date(),exhibitor: exhibitor8._id,type:"PHOTO"});
-  let quest9 = new Question({body: "Trek een foto van een vakantiebrochure?", posted: new Date(),exhibitor: exhibitor9._id,type:"PHOTO"});
-  let quest10 = new Question({body: "Hoe helpt de overheid?", posted: new Date(),exhibitor: exhibitor10._id,type:"TEXT"});
-  let quest11 = new Question({body: "Hoe werkt een zelfhulpgroep?", posted: new Date(),exhibitor: exhibitor11._id,type:"PHOTO"});
+  let quest = new Question({body: "Uit welk materiaal wordt een rolstoel gemaakt?", posted: new Date(), category: "Rolstoelen", possibleAnswers: ["Aluminium", "Titanium"], exhibitor: exhibitor._id, type: "TEXT"});
+  let quest2 = new Question({body: "Met hoeveel wordt een match van rolstoel voetbal gespeeld?", category: "Sport",posted: new Date(),exhibitor: exhibitor2._id,type:"TEXT"});
+  let quest3 = new Question({body: "Geef 3 voorbeelden van vaakgebruikte hulpmiddelen", category: "Hulpmiddelen",posted: new Date(),exhibitor: exhibitor3._id,type:"TEXT"});
+  let quest4 = new Question({body: "Trek een foto van een loophulpmiddel?", posted: new Date(),category: "Scooters",exhibitor: exhibitor4._id,type:"PHOTO"});
+  let quest5 = new Question({body: "Trek een foto van een scooter?", posted: new Date(),category: "Tilhulpmiddelen",exhibitor: exhibitor5._id,type:"PHOTO"});
+  let quest6 = new Question({body: "Trek een foto van een tilhulpmiddel?", posted: new Date(),category: "Loophulpmiddelen",exhibitor: exhibitor6._id,type:"PHOTO"});
+  let quest7 = new Question({body: "Trek een foto van een domitica hulpsysteem?", posted: new Date(),category: "Domotica",exhibitor: exhibitor7._id,type:"PHOTO"});
+  let quest8 = new Question({body: "Trek een foto van een huislift?", posted: new Date(),category: "Huislifter",exhibitor: exhibitor8._id,type:"PHOTO"});
+  let quest9 = new Question({body: "Trek een foto van een vakantiebrochure?", posted: new Date(),category: "Vakantie en reizen",exhibitor: exhibitor9._id,type:"PHOTO"});
+  let quest10 = new Question({body: "Hoe helpt de overheid?", posted: new Date(),category: "Overheidsdiensten",exhibitor: exhibitor10._id,type:"TEXT"});
+  let quest11 = new Question({body: "Hoe werkt een zelfhulpgroep?", posted: new Date(),category: "Zelfhulpgroepen",exhibitor: exhibitor11._id,type:"PHOTO"});
 
   let group = new Group({teacherId: 0, code: "1234",imageString: "/tijdCodeVoorUniek" })
   
