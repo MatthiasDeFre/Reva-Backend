@@ -3,6 +3,7 @@ var router = express.Router();
 let mongoose = require('mongoose');
 let Exhibitor = mongoose.model('Exhibitor');
 let Category = mongoose.model('Category');
+let Group = mongoose.model('Group');
 let Coordinate = mongoose.model('Coordinate');
 let Settings = mongoose.model('Settings');
 /* GET home page. */
@@ -122,6 +123,21 @@ router.delete("/category/:category", function(req, res, next) {
     res.json(req.category)
   })
 })
+
+router.delete("/removeexhibitors", function(req, res, next) {
+  Exhibitor.deleteMany({}, function(err, respons) {
+    res.status(204);
+    res.send("Exhibitors deleted")
+  })
+})
+
+router.delete("/removegroups", function (req, res, next) {
+  Group.deleteMany({}, function (err, response) {
+    res.status(204);
+    res.send("Codes deleted")
+  })
+})
+
 router.param("exhibitor", function (req, res, next, id) {
   console.log(id);
   let query = Exhibitor.findById(id).exec(function (err, exhibitor) {
