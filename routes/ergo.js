@@ -47,6 +47,7 @@ router.get("/categories", function(req, res, next) {
 /* GET home page. */
 router.post('/question/', function(req, res, next) {
   console.log(req.body)
+  validateQuestion(req.body, function() {
   let question = new Question({body: req.body._body, possibleAnswers: req.body._answers, exhibitor: req.body._exhibitor._id, posted: new Date()});
   
    question.save(function(err, question){
@@ -55,7 +56,8 @@ router.post('/question/', function(req, res, next) {
       return next(err)
     //Populate exhibitor
     res.json(question);
-  })
+  })     
+})
 });
 router.put('/question/:question', function(req, res, next) {
   let question = req.question;
@@ -95,4 +97,20 @@ router.param("question", function (req, res, next, id) {
     res.send("Questions deleted")
   })
 })  */
+
+//HELPER FUNCTIONS
+function validateQuestion(question, callback) {
+  if(question.body.length < 10 || !questions.possibleAnswers) {
+    return next(new Error("Invalid fields"));
+  }
+  //SEARCH FOR EXHIBITOR
+  Exhibitor.findById(question._exhibitor._id, function(err, ex) {
+    if(err || !exhibitor)
+      return next(new Error("Exhibitor not found"))
+    else
+      //CONTINUE (would need to return promise otherwise)
+      callback();
+  })
+}
+
 module.exports = router;
