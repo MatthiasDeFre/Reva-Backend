@@ -45,7 +45,9 @@ router.post('/exhibitor/', function (req, res, next) {
 });
 router.post("/category/", function(req, res, next) {
   console.log(req.headers)
+  console.log(req.body.name)
   let category = new Category({name: req.body.name});
+  console.log(category)
   category.save(function(err, category) {
     if(err)
       return next(err)

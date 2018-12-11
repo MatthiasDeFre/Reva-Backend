@@ -53,13 +53,21 @@ router.get('/seed', function(req, res, next) {
   let category = new Category({name: "Rolstoelen"});
   let category2 = new Category({name: "Hulpmiddellen"});
   let category3 = new Category({name: "Sport"});
+  let category4 = new Category({name: "Scooters"});
+  let category5 = new Category({name: "Tilhulpmiddelen"});
+  let category6 = new Category({name: "Loophulpmiddelen"});
+  let category7 = new Category({name: "Domotica"});
+  let category8 = new Category({name: "Huislifter"});
+  let category9 = new Category({name: "Vakantie en reizen"});
+  let category10 = new Category({name: "Overheidsdiensten"});
+  let category11 = new Category({name: "Zelfhulpgroepen"});
 
   let settings = new Settings({studentCode: "9pu2z8RX3zBp7kPD",teacherCode:"b78MDPhDjuS9L44k",expoDate: new Date()})
 
   let query = Question.insertMany([quest, quest2,quest3,quest4,quest5,quest6,quest7,quest8,quest9,quest10,quest11]);
   let query2 = Exhibitor.insertMany([exhibitor, exhibitor2, exhibitor3,exhibitor4,exhibitor5,exhibitor6,exhibitor7,exhibitor8,exhibitor9,exhibitor10,exhibitor11])
   let query3 = Group.insertMany([group])
-  let query4 = Category.insertMany([category, category2, category3])
+  let query4 = Category.insertMany([category, category2, category3, category4])
   let query5 = User.insertMany([user, user2, user3])
   let query6 = Settings.insertMany([settings])
   query2.then(() => query.then(() =>query3.then(() =>query4.then(() => query5.then(()  => query6.then(() => res.send("seeding ok")))))));
