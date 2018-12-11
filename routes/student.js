@@ -59,10 +59,11 @@ router.post("/exhibitor/:group", function(req, res, next) {
   if(group.answers.length > 0 && !group.answers[group.answers.length-1].answer) {
     console.log("has open question")
     //SINGLE QUESTION
-    Answer.populate(group.answers[group.answers.length-1], {select: "body type counter", path: "question", populate: {path: "exhibitor"}}, function(err, answerpop){
+    Answer.populate(group.answers[group.answers.length-1], {select: "body type counter category", path: "question", populate: {path: "exhibitor"}}, function(err, answerpop){
       let exhibitorObject = answerpop.question.exhibitor.toObject();
       exhibitorObject.question = {_id:answerpop.question._id, body: answerpop.question.body, counter: answerpop.counter, type: answerpop.question.type};
       answerpop.question.exhibitor.visits++;
+      console.log(answerpop)
       exhibitorObject.category = answerpop.question.category 
       console.log(exhibitorObject)
       answerpop.question.exhibitor.save(() => {
@@ -104,7 +105,7 @@ router.post("/exhibitor/:group", function(req, res, next) {
       let question = questions[Math.floor(Math.random()*questions.length)].toObject();
       question.counter = group.answers.length+1
       exhibitorObject.question= question;
-
+      
       exhibitorObject.category = question.category 
       for(var i=0; i< categories.length;i++) {
         if(categories[i]==question.category)
