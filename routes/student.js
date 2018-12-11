@@ -97,7 +97,7 @@ router.post("/exhibitor/:group", function(req, res, next) {
     //Filter out all fields except body => PossibleAnswers = PossibleCheating
     Question.find({exhibitor: exhibitor._id}, {}).exec(function(err, questions) {
       let exhibitorObject = exhibitor.toObject()
-     
+      exhibitor.visits++;
 
       //SINGLE QUESTION
       let question = questions[Math.floor(Math.random()*questions.length)].toObject();
@@ -115,7 +115,9 @@ router.post("/exhibitor/:group", function(req, res, next) {
       })*/
       console.log(exhibitorObject)
       group.save(function(err) {
-        res.json(exhibitorObject)
+        exhibitor.save(function(err) {
+          res.json(exhibitorObject)
+        })
       })
     })
   })
