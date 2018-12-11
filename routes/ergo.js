@@ -8,6 +8,23 @@ router.get('/question/:question', function(req, res, next) {
   res.json(req.question)
 });
 
+router.get('/exhibitor/:exhibitor', function(req, res) {
+  res.json(req.exhibitor);
+});
+
+router.param("exhibitor", function (req, res, next, id) {
+  console.log(id);
+  let query = Exhibitor.findById(id).exec(function (err, exhibitor) {
+    if(err) {
+      return next(new Error("Category not found"));
+    }
+    console.log(exhibitor);
+    req.exhibitor = exhibitor;
+    return next();
+  })
+})
+
+
 /* GET home page. */
 router.get('/questions', function(req, res, next) {
   //FILTER FOR STUDENTNUMBER
@@ -15,7 +32,7 @@ router.get('/questions', function(req, res, next) {
   query.exec(function (err, questions) {
     if (err || questions.length == 0)
       return next(new Error("No questions found"));
-      console.log(questions)
+      console.log(questions) 
     res.json(questions);
   });
 });
@@ -84,6 +101,8 @@ router.param("question", function (req, res, next, id) {
     return next();
   });
 })
+
+
 /*  router.delete("/removequestions", function (req, res, next) {
   Question.deleteMany({ ?????Id: 0 }, function (err, response) {
     res.status(204);
