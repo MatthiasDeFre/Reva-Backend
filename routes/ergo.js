@@ -76,11 +76,16 @@ router.post('/question/', function(req, res, next) {
 });
 router.put('/question/:question', function(req, res, next) {
   let question = req.question;
-  question.body = req.body.body;
-  question.possibleAnswers = req.body.possibleAnswers;
-  question.exhibitor = req.body.exhibitor._id; 
+  console.log(req.body)
+  question.body = req.body._body;
+  question.possibleAnswers = req.body._answers;
+  question.exhibitor = req.body._exhibitor._id; 
   //populate exhibitor
-  res.send(question);
+ question.save(function(err, q) {
+  if(err)
+    return next(err) 
+  res.json(q);
+ })
 });
 router.delete('/question/:question', function(req, res, next) {
   let question = req.question;

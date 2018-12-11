@@ -23,9 +23,10 @@ router.get('/categories', function (req, res, next) {
   //FILTER FOR STUDENTNUMBER
   let query = Category.find({});
   query.exec(function (err, categories) {
+
     if (err || categories.length == 0)
       return next(new Error("No categories found"));
-    categories = categories.map(c => c.name)
+    categories = categories.filter(c => c.name).map(c => c.name)
     res.json(categories);
   });
 });
@@ -46,12 +47,14 @@ router.post('/exhibitor/', function (req, res, next) {
 });
 router.post("/category/", function(req, res, next) {
   console.log(req.headers)
+  console.log(req.body.name)
   let category = new Category({name: req.body.name});
+  console.log(category)
   category.save(function(err, category) {
     if(err)
       return next(err)
     res.status(201)
-    res.json(category)
+    res.json(category.name)
   })
 })
 router.put('/exhibitor/:exhibitor', function (req, res, next) {
@@ -68,9 +71,11 @@ router.put('/exhibitor/:exhibitor', function (req, res, next) {
 });
 router.put("/category/:category", function(req, res, next) {
   let category = req.category;
+  
   category.name = req.body.name;
+  
   category.save((err, category) => {
-    res.json(category)
+    res.json(category.name)
   })
 })
 router.put('/settings/', function (req, res, next) {
@@ -160,7 +165,7 @@ router.param("settings", function (req, res, next, id) {
 })
 router.param("category", function (req, res, next, id) {
   console.log(id);
-  let query = Category.findById(id).exec(function (err, category) {
+  let query = Category.findOne({name: id}).exec(function (err, category) {
     console.log(category)
     if (err) {
       return next(new Error("Category not found"));
