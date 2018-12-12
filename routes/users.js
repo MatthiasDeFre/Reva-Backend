@@ -5,6 +5,7 @@ let User = mongoose.model('User');
 let passport = require('passport');
 let jwt = require('express-jwt');
 let auth = jwt({secret: process.env.BACKEND_SECRET});
+let Settings = mongoose.model('Settings');
 
 /* GET users listing. */
 router.post('/login', function(req, res, next) {
@@ -39,11 +40,26 @@ router.post('/register', function(req, res, next) {
   user.name = req.body.name
   user.email = req.body.username;
   user.setPassword(req.body.password);
-  user.save(function(err) {
-    if (err) {
-      return next(err);
+  Settings.findOne({}, "studentCode teacherCode", function(err, settings) {
+    let inputCode = req.body.regcode
+    console.log(inputCode)
+    console.log(settings)
+    if(inputCode == settings.studentCode)
+      user.role = "ERGO"
+    else if(inputCode == settings.teacherCode)
+      user.role = "TEACHER"
+    else {
+      let error = new Error("Foute code")
+      error.status = 400
+      return next(error)
     }
-    return res.json({ token: user.generateJWT(), user: user });
+    user.save(function(err) {
+      if (err) {
+        return next(err);
+      }
+      return res.json({ token: user.generateJWT(), user: user });
+    });
   });
+  
 });
 module.exports = router;
