@@ -64,7 +64,7 @@ router.get("/categories", function(req, res, next) {
 /* GET home page. */
 router.post('/question/', function(req, res, next) {
   console.log(req.body)
-  let question = new Question({body: req.body._body, possibleAnswers: req.body._answers, exhibitor: req.body._exhibitor._id, posted: new Date()});
+  let question = new Question({body: req.body._body, possibleAnswers: req.body._answers, exhibitor: req.body._exhibitor._id, posted: new Date(), type: req.body._type});
   
    question.save(function(err, question){
     console.log(err)
@@ -80,6 +80,7 @@ router.put('/question/:question', function(req, res, next) {
   question.body = req.body._body;
   question.possibleAnswers = req.body._answers;
   question.exhibitor = req.body._exhibitor._id; 
+  question.type = req.body._type;
   //populate exhibitor
  question.save(function(err, q) {
   if(err)
