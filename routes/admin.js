@@ -3,6 +3,7 @@ var router = express.Router();
 let mongoose = require('mongoose');
 let Exhibitor = mongoose.model('Exhibitor');
 let Category = mongoose.model('Category');
+let Group = mongoose.model('Group');
 let Coordinate = mongoose.model('Coordinate');
 let Settings = mongoose.model('Settings');
 let jwt = require('express-jwt');
@@ -36,9 +37,10 @@ router.get('/categories', function (req, res, next) {
   //FILTER FOR STUDENTNUMBER
   let query = Category.find({});
   query.exec(function (err, categories) {
+
     if (err || categories.length == 0)
       return next(new Error("No categories found"));
-    categories = categories.map(c => c.name)
+    categories = categories.filter(c => c.name).map(c => c.name)
     res.json(categories);
   });
 });
@@ -59,12 +61,14 @@ router.post('/exhibitor/', function (req, res, next) {
 });
 router.post("/category/", function(req, res, next) {
   console.log(req.headers)
+  console.log(req.body.name)
   let category = new Category({name: req.body.name});
+  console.log(category)
   category.save(function(err, category) {
     if(err)
       return next(err)
     res.status(201)
-    res.json(category)
+    res.json(category.name)
   })
 })
 router.put('/exhibitor/:exhibitor', function (req, res, next) {
@@ -81,9 +85,11 @@ router.put('/exhibitor/:exhibitor', function (req, res, next) {
 });
 router.put("/category/:category", function(req, res, next) {
   let category = req.category;
+  
   category.name = req.body.name;
+  
   category.save((err, category) => {
-    res.json(category)
+    res.json(category.name)
   })
 })
 router.put('/settings/', function (req, res, next) {
@@ -136,6 +142,21 @@ router.delete("/category/:category", function(req, res, next) {
     res.json(req.category)
   })
 })
+
+router.delete("/removeexhibitors", function(req, res, next) {
+  Exhibitor.deleteMany({}, function(err, respons) {
+    res.status(204);
+    res.send("Exhibitors deleted")
+  })
+})
+
+router.delete("/removegroups", function (req, res, next) {
+  Group.deleteMany({}, function (err, response) {
+    res.status(204);
+    res.send("Codes deleted")
+  })
+})
+
 router.param("exhibitor", function (req, res, next, id) {
   console.log(id);
   let query = Exhibitor.findById(id).exec(function (err, exhibitor) {
@@ -158,7 +179,7 @@ router.param("settings", function (req, res, next, id) {
 })
 router.param("category", function (req, res, next, id) {
   console.log(id);
-  let query = Category.findById(id).exec(function (err, category) {
+  let query = Category.findOne({name: id}).exec(function (err, category) {
     console.log(category)
     if (err) {
       return next(new Error("Category not found"));

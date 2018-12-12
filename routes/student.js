@@ -100,7 +100,7 @@ router.post("/exhibitor/:group", function(req, res, next) {
     console.log(exhibitor)
     Question.find({exhibitor: exhibitor._id, category: {$in: categories}}, {}).exec(function(err, questions) {
       let exhibitorObject = exhibitor.toObject()
-      console.log(questions)
+      exhibitor.visits++;
       //SINGLE QUESTION
       let question = questions[Math.floor(Math.random()*questions.length)].toObject();
       question.counter = group.answers.length+1
