@@ -8,6 +8,23 @@ router.get('/question/:question', function(req, res, next) {
   res.json(req.question)
 });
 
+router.get('/exhibitor/:exhibitor', function(req, res) {
+  res.json(req.exhibitor);
+});
+
+router.param("exhibitor", function (req, res, next, id) {
+  console.log(id);
+  let query = Exhibitor.findById(id).exec(function (err, exhibitor) {
+    if(err) {
+      return next(new Error("Category not found"));
+    }
+    console.log(exhibitor);
+    req.exhibitor = exhibitor;
+    return next();
+  })
+})
+
+
 /* GET home page. */
 router.get('/questions', function(req, res, next) {
   //FILTER FOR STUDENTNUMBER
@@ -15,7 +32,7 @@ router.get('/questions', function(req, res, next) {
   query.exec(function (err, questions) {
     if (err || questions.length == 0)
       return next(new Error("No questions found"));
-      console.log(questions)
+      console.log(questions) 
     res.json(questions);
   });
 });
@@ -47,8 +64,14 @@ router.get("/categories", function(req, res, next) {
 /* GET home page. */
 router.post('/question/', function(req, res, next) {
   console.log(req.body)
+<<<<<<< HEAD
   validateQuestion(next, req.body, function() {
   let question = new Question({body: req.body._body, possibleAnswers: req.body._answers, exhibitor: req.body._exhibitor._id, posted: new Date()});
+=======
+  validateQuestion(req.body, function() {
+  let question = new Question({body: req.body._body, possibleAnswers: req.body._answers, exhibitor: req.body._exhibitor._id, posted: new Date(), type: req.body._type});
+
+>>>>>>> 394366d93e9fb8136a0bb255d69488ce5ef8975f
   
    question.save(function(err, question){
     console.log(err)
@@ -83,6 +106,7 @@ router.put('/question/:question', function(req, res, next) {
   question.body = req.body._body;
   question.possibleAnswers = req.body._answers;
   question.exhibitor = req.body._exhibitor._id; 
+  question.type = req.body._type;
   //populate exhibitor
  question.save(function(err, q) {
   if(err)
@@ -109,6 +133,8 @@ router.param("question", function (req, res, next, id) {
     return next();
   });
 })
+
+
 /*  router.delete("/removequestions", function (req, res, next) {
   Question.deleteMany({ ?????Id: 0 }, function (err, response) {
     res.status(204);
