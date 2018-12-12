@@ -48,7 +48,8 @@ router.get('/seed', function(req, res, next) {
   let quest10 = new Question({body: "Hoe helpt de overheid?", posted: new Date(),category: "Overheidsdiensten",exhibitor: exhibitor10._id,type:"TEXT"});
   let quest11 = new Question({body: "Hoe werkt een zelfhulpgroep?", posted: new Date(),category: "Zelfhulpgroepen",exhibitor: exhibitor11._id,type:"PHOTO"});
 
-  let group = new Group({teacherId: 0, code: "1234",imageString: "/tijdCodeVoorUniek" })
+  console.log(user2._id)
+  let group = new Group({teacherId: user2._id, code: "1234",imageString: "/tijdCodeVoorUniek" })
   
   let category = new Category({name: "Rolstoelen"});
   let category2 = new Category({name: "Hulpmiddellen"});

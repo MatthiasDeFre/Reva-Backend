@@ -14,7 +14,7 @@ var CategorySchema = mongoose.Schema({
 
 var GroupSchema = mongoose.Schema({
     //Change to objectId later
-    teacherId: {type: Number, index: true},
+    teacherId: {type: mongoose.Schema.Types.ObjectId, ref: "User", index: true},
     name: String,
     code : {type: String, unique: true},
     imageString: String,

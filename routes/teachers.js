@@ -5,13 +5,16 @@ let Question = mongoose.model('Question');
 let Group = mongoose.model('Group');
 let Answer = mongoose.model('Answer');
 var path = require('path');
+var ObjectId = require('mongoose').Types.ObjectId; 
 /* GET home page. */
 router.get('/codes', function (req, res, next) {
   //GET TEACHER ID FROM INJECTION AUTH SERVICE
+  console.log(mongoose.Types.ObjectId(req.user._id))
   let query = Group.find({ "teacherId": req.user._id }).select({ "code": 1, "name":1});
   query.exec(function (err, codes) {
     if (err)
       return next(new Error("No codes found"));
+      console.log(codes)
     res.json(codes);
   });
 });
