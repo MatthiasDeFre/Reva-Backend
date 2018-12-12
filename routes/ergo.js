@@ -47,7 +47,7 @@ router.get("/categories", function(req, res, next) {
 /* GET home page. */
 router.post('/question/', function(req, res, next) {
   console.log(req.body)
-  validateQuestion(req.body, function() {
+  validateQuestion(next, req.body, function() {
   let question = new Question({body: req.body._body, possibleAnswers: req.body._answers, exhibitor: req.body._exhibitor._id, posted: new Date()});
   
    question.save(function(err, question){
@@ -117,13 +117,13 @@ router.param("question", function (req, res, next, id) {
 })  */
 
 //HELPER FUNCTIONS
-function validateQuestion(question, callback) {
-  if(question.body.length < 10 || !questions.possibleAnswers) {
+function validateQuestion(next, question, callback) {
+  if(question._body.length < 10) {
     return next(new Error("Invalid fields"));
   }
   //SEARCH FOR EXHIBITOR
   Exhibitor.findById(question._exhibitor._id, function(err, ex) {
-    if(err || !exhibitor)
+    if(err || !ex)
       return next(new Error("Exhibitor not found"))
     else
       //CONTINUE (would need to return promise otherwise)
