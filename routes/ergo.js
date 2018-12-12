@@ -59,6 +59,24 @@ router.post('/question/', function(req, res, next) {
   })     
 })
 });
+
+router.get('/exhibitor/:exhibitor', function(req, res) {
+  res.json(req.exhibitor);
+});
+
+router.param("exhibitor", function (req, res, next, id) {
+  console.log(id);
+  let query = Exhibitor.findById(id).exec(function (err, exhibitor) {
+    if(err) {
+      return next(new Error("Category not found"));
+    }
+    console.log(exhibitor);
+    req.exhibitor = exhibitor;
+    return next();
+  })
+})
+
+
 router.put('/question/:question', function(req, res, next) {
   let question = req.question;
   console.log(req.body)
