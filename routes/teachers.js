@@ -8,7 +8,7 @@ var path = require('path');
 /* GET home page. */
 router.get('/codes', function (req, res, next) {
   //GET TEACHER ID FROM INJECTION AUTH SERVICE
-  let query = Group.find({ "teacherId": 0 }).select({ "code": 1, "name":1});
+  let query = Group.find({ "teacherId": req.user._id }).select({ "code": 1, "name":1});
   query.exec(function (err, codes) {
     if (err)
       return next(new Error("No codes found"));
@@ -31,7 +31,7 @@ router.get('/questions', function (req, res, next) {
 router.get('/groupquestions', function (req, res, next) {
   //GET TEACHER FROM AUTH
   //TO DO Filter out non answered questions (or not?)
-  let query = Group.find({ "teacherId": 0 }, "name imageString answers.answer").populate({path: "answers.question", populate: {path: "exhibitor"}});
+  let query = Group.find({ "teacherId": req.user._id }, "name imageString answers.answer").populate({path: "answers.question", populate: {path: "exhibitor"}});
   query.exec(function (err, groups) {
     if (err || groups.length == 0)
       return next(new Error("No questions found"));
@@ -84,7 +84,7 @@ let codesObject = [];
   });
   
     for(let i = 0; i < amount;i++) {
-     let group = new Group({ teacherId: 0 });
+     let group = new Group({ teacherId: req.user._id });
      let code = generateCode(codesObject);
     
   

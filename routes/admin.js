@@ -6,6 +6,20 @@ let Category = mongoose.model('Category');
 let Group = mongoose.model('Group');
 let Coordinate = mongoose.model('Coordinate');
 let Settings = mongoose.model('Settings');
+let jwt = require('express-jwt');
+let auth = jwt({secret: process.env.BACKEND_SECRET});
+
+function HasRole(roles) {
+  return HasRole[roles] || (HasRole[roles] = function(req, res, next) {
+    if (~roles.indexOf(req.user.role)) {
+      next();
+    }
+    else {
+      return next(new Error("Invalid role"))
+    }
+   
+  })
+}
 /* GET home page. */
 router.get('/exhibitors', function (req, res, next) {
   //FILTER FOR STUDENTNUMBER

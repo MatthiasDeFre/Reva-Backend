@@ -5,8 +5,8 @@ var QuestionSchema = mongoose.Schema({
     posted: Date,
     possibleAnswers: [String],
     type : String,
-    exhibitor: {type: mongoose.Schema.Types.ObjectId, ref: "Exhibitor"}
-
+    exhibitor: {type: mongoose.Schema.Types.ObjectId, ref: "Exhibitor"},
+    category: String
 })
 
 mongoose.model('Question', QuestionSchema);

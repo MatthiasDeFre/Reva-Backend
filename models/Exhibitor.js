@@ -6,7 +6,7 @@ var CoordinateSchema = mongoose.Schema({
 var ExhibitorSchema = mongoose.Schema({
     name: String,
     score : Number,
-    category : {type: String, index: true, default: "Andere"},
+    category : [{type: String, index: true}],
     coordinates: CoordinateSchema 
 })
 

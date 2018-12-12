@@ -64,7 +64,9 @@ router.get("/categories", function(req, res, next) {
 /* GET home page. */
 router.post('/question/', function(req, res, next) {
   console.log(req.body)
+  validateQuestion(req.body, function() {
   let question = new Question({body: req.body._body, possibleAnswers: req.body._answers, exhibitor: req.body._exhibitor._id, posted: new Date(), type: req.body._type});
+
   
    question.save(function(err, question){
     console.log(err)
@@ -72,8 +74,27 @@ router.post('/question/', function(req, res, next) {
       return next(err)
     //Populate exhibitor
     res.json(question);
-  })
+  })     
+})
 });
+
+router.get('/exhibitor/:exhibitor', function(req, res) {
+  res.json(req.exhibitor);
+});
+
+router.param("exhibitor", function (req, res, next, id) {
+  console.log(id);
+  let query = Exhibitor.findById(id).exec(function (err, exhibitor) {
+    if(err) {
+      return next(new Error("Category not found"));
+    }
+    console.log(exhibitor);
+    req.exhibitor = exhibitor;
+    return next();
+  })
+})
+
+
 router.put('/question/:question', function(req, res, next) {
   let question = req.question;
   console.log(req.body)
@@ -115,4 +136,20 @@ router.param("question", function (req, res, next, id) {
     res.send("Questions deleted")
   })
 })  */
+
+//HELPER FUNCTIONS
+function validateQuestion(question, callback) {
+  if(question.body.length < 10 || !questions.possibleAnswers) {
+    return next(new Error("Invalid fields"));
+  }
+  //SEARCH FOR EXHIBITOR
+  Exhibitor.findById(question._exhibitor._id, function(err, ex) {
+    if(err || !exhibitor)
+      return next(new Error("Exhibitor not found"))
+    else
+      //CONTINUE (would need to return promise otherwise)
+      callback();
+  })
+}
+
 module.exports = router;

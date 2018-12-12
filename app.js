@@ -7,10 +7,25 @@ var bodyParser = require('body-parser');
 let passport = require('passport');
 //Mongoose setup
 var mongoose = require('mongoose');
+let jwt = require('express-jwt');
+let auth = jwt({secret: process.env.BACKEND_SECRET});
 
+function HasRole(roles) {
+  return HasRole[roles] || (HasRole[roles] = function(req, res, next) {
+    if (~roles.indexOf(req.user.role)) {
+      next();
+    }
+    else {
+      let err = new Error("Invalid role");
+      err.status = 401
+      return next()
+    }
+   
+  })
+}
 //Need to use option newUrlParser because of deprecation
 //(node:17724) DeprecationWarning: current URL string parser is deprecated, and will be removed in a future version. To use the new parser, pass option { useNewUrlParser: true } to MongoClient.connect.
-mongoose.connect('mongodb://localhost/revadb', {useNewUrlParser: true});
+mongoose.connect('mongodb://localhost/revadb', {useNewUrlParser: true, useCreateIndex: true});
 require("./models/Category");
 require("./models/Exhibitor");
 require("./models/Question");
@@ -46,12 +61,12 @@ app.use(passport.initialize());
 //ROUTING PATHS
 app.use('/', index);
 app.use('/API/users', users);
-app.use("/API/general", general);
-app.use("/API/teachers", teachers);
+app.use("/API/general", auth, general);
+app.use("/API/teachers",auth, HasRole(["TEACHER"]), teachers);
 app.use("/API/student", students);
-app.use("/API/ergo", ergoStudents);
+app.use("/API/ergo", auth, HasRole(["ADMIN", "ERGO"]), ergoStudents);
 app.use("/API/test", test);
-app.use("/API/admin", admin);
+app.use("/API/admin", auth, HasRole(["ADMIN"]), admin);
 //app.use("/API/ergo", ergoStudents);
 
 // catch 404 and forward to error handler
