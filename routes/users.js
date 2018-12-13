@@ -62,4 +62,16 @@ router.post('/register', function(req, res, next) {
   });
   
 });
+
+
+router.get("/expodate", function(req, res,next) {
+
+  Settings.findOne({},"expoDate", function(err,settings){
+    console.log(settings.expoDate);
+    if (settings.expoDate != null) {  
+    return res.json({expoDate: settings.expoDate});
+    }
+  });
+});
+
 module.exports = router;
