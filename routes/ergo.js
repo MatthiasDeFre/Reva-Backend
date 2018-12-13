@@ -64,16 +64,11 @@ router.get("/categories", function(req, res, next) {
 /* GET home page. */
 router.post('/question/', function(req, res, next) {
   console.log(req.body)
-<<<<<<< HEAD
-  validateQuestion(next, req.body, function() {
-  let question = new Question({body: req.body._body, possibleAnswers: req.body._answers, exhibitor: req.body._exhibitor._id, posted: new Date()});
-=======
   validateQuestion(req.body, function() {
   let question = new Question({body: req.body._body, possibleAnswers: req.body._answers, exhibitor: req.body._exhibitor._id, posted: new Date(), type: req.body._type});
 
->>>>>>> 394366d93e9fb8136a0bb255d69488ce5ef8975f
   
-   question.save(function(err, question){
+   question.save(function(err, quePstion){
     console.log(err)
      if(err)
       return next(err)
