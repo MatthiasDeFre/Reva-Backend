@@ -142,6 +142,7 @@ router.param("question", function (req, res, next, id) {
 //HELPER FUNCTIONS
 function validateQuestion(next, question, callback) {
   console.log(question)
+  console.log("")
   if(question._body.length < 10) {
     return next(new Error("Invalid fields"));
   }
