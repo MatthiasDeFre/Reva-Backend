@@ -23,7 +23,7 @@ router.get('/seed', function(req, res, next) {
   let user2 = new User({name: "Matthias De Fré", email:"leerkracht_de_bakker@hotmail.com", hash: "a05f30cd9a3098a0a0f2a15f3d1c2b0976dcc04a2079e55fa0331e3dbf4a2f6d180affa03253fc304a365714d6ae1ceff0aace878d99f7b8c6af30bace991a92", salt: "5767c251aa5922f9721f9bc19a490b566d04802dce22ce4ae1dd5fb81e7f189c", role : "TEACHER"})
   let user3 = new User({name: "Matthias De Fré", email:"admin_freddy@hotmail.com", hash: "a05f30cd9a3098a0a0f2a15f3d1c2b0976dcc04a2079e55fa0331e3dbf4a2f6d180affa03253fc304a365714d6ae1ceff0aace878d99f7b8c6af30bace991a92", salt: "5767c251aa5922f9721f9bc19a490b566d04802dce22ce4ae1dd5fb81e7f189c", role : "ADMIN"})
 
-  let exhibitor = new Exhibitor({name: "RolStoel Inc", category:["Rolstoelen"], coordinates: {xCo: 600, yCo: 600}});
+  let exhibitor = new Exhibitor({name: "RolStoel Inc", category:["Rolstoelen", "Sport"], coordinates: {xCo: 600, yCo: 600}});
   let exhibitor2 = new Exhibitor({name: "Sport & Co.", category:["Sport"], coordinates: {xCo: 620, yCo: 600}});
   let exhibitor3 = new Exhibitor({name: "Hulpmiddel.com", category:["Hulpmiddelen"], coordinates: {xCo: 630, yCo: 600}});
   let exhibitor4 = new Exhibitor({name: "Scoot Scoot", category:["Scooters"], coordinates: {xCo: 650, yCo: 600}});

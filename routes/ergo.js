@@ -5,6 +5,7 @@ let Question = mongoose.model('Question');
 let Exhibitor = mongoose.model('Exhibitor');
 router.get('/question/:question', function(req, res, next) {
   //FILTER FOR STUDENTNUMBER
+  console.log(req.question)
   res.json(req.question)
 });
 
@@ -64,7 +65,7 @@ router.get("/categories", function(req, res, next) {
 /* GET home page. */
 router.post('/question/', function(req, res, next) {
   console.log(req.body)
-  validateQuestion(req.body, function() {
+  validateQuestion(next, req.body, function() {
   let question = new Question({body: req.body._body, possibleAnswers: req.body._answers, exhibitor: req.body._exhibitor._id, posted: new Date(), type: req.body._type});
 
   
@@ -102,6 +103,7 @@ router.put('/question/:question', function(req, res, next) {
   question.possibleAnswers = req.body._answers;
   question.exhibitor = req.body._exhibitor._id; 
   question.type = req.body._type;
+  question.category = req.body._category;
   //populate exhibitor
  question.save(function(err, q) {
   if(err)
@@ -139,6 +141,7 @@ router.param("question", function (req, res, next, id) {
 
 //HELPER FUNCTIONS
 function validateQuestion(next, question, callback) {
+  console.log(question)
   if(question._body.length < 10) {
     return next(new Error("Invalid fields"));
   }
