@@ -97,8 +97,8 @@ router.post("/exhibitor/:group", function(req, res, next) {
   Exhibtor.findOne({category: {$in: categories}, _id:{$nin: exhibitors}}).sort({visits: -1}).limit(1).exec(function(err, exhibitor) {
     //If exhibitor => undefined (loosen query  => only exhibitor not categories))
     //Filter out all fields except body => PossibleAnswers = PossibleCheating
-    console.log(exhibitor)
-    Question.find({exhibitor: exhibitor._id, category: {$in: categories}}, {}).exec(function(err, questions) {
+    console.log(categories)
+    Question.find({exhibitor: exhibitor._id}, {}).exec(function(err, questions) {
       let exhibitorObject = exhibitor.toObject()
       exhibitor.visits++;
       //SINGLE QUESTION
