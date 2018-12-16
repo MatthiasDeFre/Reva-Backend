@@ -54,28 +54,25 @@ router.get('/seed', function(req, res, next) {
   let group2 = new Group({teacherId: user2.id, code: "5256",name: "The RDR Dudes",description:"Wij zijn cool",imageString: "tijdCodeVoorUniek" ,answers:[{answer:"Titanium", question: quest._id, counter: 1},{answer:"tijdCodeVoorUniek", question: quest11._id, counter: 1}]})
   let group3 = new Group({teacherId: user2.id, code: "0000"});
 
-  let category = new Category({name: "Aangepaste auto's"});
-  let category2 = new Category({name: "Aangepaste kledij"});
-  let category3 = new Category({name: "Belangenverenigingen en zelfhulpgroepen"});
-  let category4 = new Category({name: "Fietsen "});
-  let category5 = new Category({name: "Huisliften"});
-  let category6 = new Category({name: "Hulpmiddelen ADL"});
-  let category7 = new Category({name: "Hulpmiddelen voor kinderen"});
-  let category8 = new Category({name: "Loophulpmiddelen en rampen"});
-  let category9 = new Category({name: "Omgevingsbediening, domotica en besturing"});
-  let category10 = new Category({name: "Overheidsdiensten"});
-  let category11 = new Category({name: "Rolstoelen"});
-  let category12 = new Category({name: "Rolstoelen sport"});
-  let category13 = new Category({name: "Scooters"});
-  let category14 = new Category({name: "Tilhulpmiddelen"});
-  let category15 = new Category({name: "Vakantie, reizen en sport"});
-
+  let category = new Category({name: "Rolstoelen"});
+  let category2 = new Category({name: "Sport"});
+  let category3 = new Category({name: "Hulpmiddelen"});
+  let category4 = new Category({name: "Scooters"});
+  let category5 = new Category({name: "Tilhulpmiddelen"});
+  let category6 = new Category({name: "Loophulpmiddelen"});
+  let category7 = new Category({name: "Domotica"});
+  let category8 = new Category({name: "Huislifter"});
+  let category9 = new Category({name: "Vakantie en reizen"});
+  let category10 = new Category({name: "Huislifter"});
+  let category11 = new Category({name: "Overheidsdiensten"});
+  let category12 = new Category({name: "Zelfhulpgroepen"});
+  
   let settings = new Settings({studentCode: "9pu2z8RX3zBp7kPD",teacherCode:"b78MDPhDjuS9L44k",expoDate: new Date("April 25, 2019, 10:00:00")})
 
   let query = Question.insertMany([quest, quest2,quest3,quest4,quest5,quest6,quest7,quest8,quest9,quest10,quest11]);
   let query2 = Exhibitor.insertMany([exhibitor, exhibitor2, exhibitor3,exhibitor4,exhibitor5,exhibitor6,exhibitor7,exhibitor8,exhibitor9,exhibitor10,exhibitor11])
   let query3 = Group.insertMany([group, group2, group3])
-  let query4 = Category.insertMany([category, category2, category3 ,category4 ,category5 ,category6 ,category7 ,category8 ,category9 ,category10 ,category11 ,category12 ,category13 ,category14 ,category15])
+  let query4 = Category.insertMany([category, category2, category3 ,category4 ,category5 ,category6 ,category7 ,category8 ,category9 ,category10 ,category11 ,category12])
   let query5 = User.insertMany([user, user2, user3])
   let query6 = Settings.insertMany([settings])
   query2.then(() => query.then(() =>query3.then(() =>query4.then(() => query5.then(()  => query6.then(() => res.send("seeding ok")))))));

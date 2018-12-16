@@ -4,6 +4,7 @@ let mongoose = require('mongoose');
 let Exhibitor = mongoose.model('Exhibitor');
 let Category = mongoose.model('Category');
 let Group = mongoose.model('Group');
+let Question = mongoose.model('Question');
 let Coordinate = mongoose.model('Coordinate');
 let Settings = mongoose.model('Settings');
 let jwt = require('express-jwt');
@@ -85,11 +86,18 @@ router.put('/exhibitor/:exhibitor', function (req, res, next) {
 });
 router.put("/category/:category", function(req, res, next) {
   let category = req.category;
-  
+  let oldName = category.name;
   category.name = req.body.name;
   
   category.save((err, category) => {
-    res.json(category.name)
+    Exhibitor.updateMany({category: oldName}, {'$set': {
+      'category.$': category.name}},function(err, exhibitors){
+        console.log(exhibitors)
+        Question.updateMany({category: oldName}, {category: category.name}, function(err, question){
+          res.json(category.name)
+        })
+    })
+    
   })
 })
 router.put('/settings/', function (req, res, next) {
@@ -132,7 +140,18 @@ router.delete('/exhibitor/:exhibitor', function (req, res, next) {
   exhibitor.remove(function (err) {
     if (err)
       return next(err);
-    res.json(exhibitor)
+    Question.find({exhibitor: exhibitor._id},function(err, questions){
+      let questionIds = []
+      for  (let q of questions) {
+        questionIds.push(q._id);
+      }  
+      Group.updateMany({}, {$pull: {answers: {question: {$in: questionIds}}}}, function(err, groups){
+        Question.deleteMany({exhibitor: exhibitor._id}, function(err){
+          res.json(exhibitor)
+        })
+      })
+    })
+    
   })
 });
 router.delete("/category/:category", function(req, res, next) {
@@ -145,8 +164,12 @@ router.delete("/category/:category", function(req, res, next) {
 
 router.delete("/removeexhibitors", function(req, res, next) {
   Exhibitor.deleteMany({}, function(err, respons) {
-    res.status(204);
-    res.send("Exhibitors deleted")
+    Question.deleteMany({}, function(err){
+      Group.updateMany({}, {$pull: {answers: {question: {$exists: true}}}},function(){
+        res.status(204);
+        res.send("Exhibitors deleted")
+      });
+    })
   })
 })
 

@@ -132,7 +132,7 @@ router.delete("/removegroup/:group", function (req, res, next) {
     if (group == null) {
       return next(new Error(""))
     }
-    if (!(group.name != undefined)) {
+   
       group.remove(function (err) {
         if (err) {
           return next(err)
@@ -140,10 +140,7 @@ router.delete("/removegroup/:group", function (req, res, next) {
         res.status(204)
         res.send("Group deleted")
       })
-    } else {
-      res.status(400)
-      res.send("Group has been chosen")
-    }
+  
   
   //VRAGEN WELKE BETER IS
   /* if(req.group == null) {
