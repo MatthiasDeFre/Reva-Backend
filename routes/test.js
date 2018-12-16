@@ -43,15 +43,15 @@ router.get('/seed', function(req, res, next) {
   let quest5 = new Question({body: "Trek een foto van een scooter?", posted: new Date(),category: "Tilhulpmiddelen",exhibitor: exhibitor5._id,type:"PHOTO"});
   let quest6 = new Question({body: "Trek een foto van een tilhulpmiddel?", posted: new Date(),category: "Loophulpmiddelen",exhibitor: exhibitor6._id,type:"PHOTO"});
   let quest7 = new Question({body: "Trek een foto van een domitica hulpsysteem?", posted: new Date(),category: "Domotica",exhibitor: exhibitor7._id,type:"PHOTO"});
-  let quest8 = new Question({body: "Trek een foto van een huislift?", posted: new Date(),category: "Huislifter",exhibitor: exhibitor8._id,type:"PHOTO"});
+  let quest8 = new Question({body: "Trek een foto van een huislift?", posted: new Date(),category: "Huisliften",exhibitor: exhibitor8._id,type:"PHOTO"});
   let quest9 = new Question({body: "Trek een foto van een vakantiebrochure?", posted: new Date(),category: "Vakantie en reizen",exhibitor: exhibitor9._id,type:"PHOTO"});
   let quest10 = new Question({body: "Hoe helpt de overheid?", posted: new Date(),category: "Overheidsdiensten",exhibitor: exhibitor10._id,type:"TEXT"});
   let quest11 = new Question({body: "Hoe werkt een zelfhulpgroep?", posted: new Date(),category: "Zelfhulpgroepen",exhibitor: exhibitor11._id,type:"PHOTO"});
 
   console.log(user2._id)
   
-  let group = new Group({teacherId: user2.id, code: "1234",name: "The Fortnite Boys",description:"Wij zijn awesome",imageString: "/tijdCodeVoorUniek" ,answers:[{answer:"Aluminium", question: quest._id, counter: 1},{answer:"/tijdCodeVoorUniek", question: quest11._id, counter: 1}]})
-  let group2 = new Group({teacherId: user2.id, code: "5256",name: "The RDR Dudes",description:"Wij zijn cool",imageString: "/tijdCodeVoorUniek" ,answers:[{answer:"Titanium", question: quest._id, counter: 1},{answer:"/tijdCodeVoorUniek", question: quest11._id, counter: 1}]})
+  let group = new Group({teacherId: user2.id, code: "1234",name: "The Fortnite Boys",description:"Wij zijn awesome",imageString: "tijdCodeVoorUniek" ,answers:[{answer:"Aluminium", question: quest._id, counter: 1},{answer:"tijdCodeVoorUniek", question: quest11._id, counter: 1}]})
+  let group2 = new Group({teacherId: user2.id, code: "5256",name: "The RDR Dudes",description:"Wij zijn cool",imageString: "tijdCodeVoorUniek" ,answers:[{answer:"Titanium", question: quest._id, counter: 1},{answer:"tijdCodeVoorUniek", question: quest11._id, counter: 1}]})
   
   let category = new Category({name: "Aangepaste auto's"});
   let category2 = new Category({name: "Aangepaste kledij"});
