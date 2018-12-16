@@ -66,7 +66,7 @@ router.get("/categories", function(req, res, next) {
 router.post('/question/', function(req, res, next) {
   console.log(req.body)
   validateQuestion(next, req.body, function() {
-  let question = new Question({body: req.body._body, possibleAnswers: req.body._answers, exhibitor: req.body._exhibitor._id, posted: new Date(), type: req.body._type});
+  let question = new Question({body: req.body._body, possibleAnswers: req.body._answers, exhibitor: req.body._exhibitor._id, posted: new Date(), type: req.body._type, category: req.body._category});
 
   
    question.save(function(err, quePstion){
