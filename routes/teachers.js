@@ -92,7 +92,7 @@ let codesObject = [];
     
   
       
-      groups.push(new Group({ teacherId: 0, code: code, answers: [] }));
+      groups.push(new Group({ teacherId: read.user._id, code: code, answers: [] }));
     }
     console.log(groups.length)
     Group.insertMany(groups, () => res.json(groups));
@@ -120,7 +120,7 @@ let codesObject = [];
 });
 
 router.delete("/removegroups", function (req, res, next) {
-  Group.deleteMany({ teacherId: 0 }, function (err, response) {
+  Group.deleteMany({ teacherId: req.user._id }, function (err, response) {
     res.status(204);
     res.send("Codes deleted")
   })
